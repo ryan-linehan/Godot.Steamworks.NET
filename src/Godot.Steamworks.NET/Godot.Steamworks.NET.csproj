@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet Package Metadata -->
+    <PackageId>Godot.Steamworks.NET</PackageId>
+    <Version>2025.162.1-beta-001</Version>
+    <Authors>RcubDev</Authors>
+    <Description>
+      A Godot module that integrates Steamworks.NET for Steam API functionality in Godot games.
+    </Description>
+    <Copyright>Copyright © 2025 RcubDev</Copyright>
+    <PackageTags>godot;steamworks.net;steam;steamworks</PackageTags>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <RepositoryUrl>https://github.com/RcubDev/Godot.Steamworks.NET</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/RcubDev/Godot.Steamworks.NET</PackageProjectUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <VersionFilePath>$(MSBuildThisFileDirectory)..\..\version.txt</VersionFilePath>
+    <PackageReleaseNotes></PackageReleaseNotes>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="GodotSharp" Version="[4.4.0, 4.5.0)" />
+  </ItemGroup>
+  <Target Name="WriteVersionToFile" AfterTargets="Build">
+    <WriteLinesToFile File="$(VersionFilePath)" Lines="$(Version)" Overwrite="true" />
+  </Target>
+</Project>
