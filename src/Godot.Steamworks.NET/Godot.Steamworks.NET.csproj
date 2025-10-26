@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -23,7 +23,10 @@
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="GodotSharp" Version="[4.4.0, 4.5.0)" />
+    <PackageReference Include="GodotSharp" Version="[4.4.0, 4.6.0)" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <Target Name="WriteVersionToFile" AfterTargets="Build">
     <WriteLinesToFile File="$(VersionFilePath)" Lines="$(Version)" Overwrite="true" />
