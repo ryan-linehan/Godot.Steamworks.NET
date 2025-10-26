@@ -1,6 +1,7 @@
 using Godot;
 using Steamworks;
 using System;
+using System.Collections.Generic;
 
 namespace Godot.Steamworks.NET.Multiplayer;
 
@@ -65,16 +66,16 @@ public partial class SteamworksLobby : Godot.RefCounted
         gameLobbyJoinRequestedCallback = Callback<GameLobbyJoinRequested_t>.Create(OnGameLobbyJoinRequested);
     }
 
-    private void PrintLobbyInfo(CSteamID lobbyId)
+    private void PrintLobbyInfo(ulong lobbyId)
     {
         GodotSteamworksLogger.LogInfo("=== Lobby Data ===");
 
         // Print known lobby data keys
         string[] knownKeys = { "game_name", "version", "host_name", "player_count", "max_players", "game_state" };
-
+        var lobby = new CSteamID(lobbyId);
         foreach (string key in knownKeys)
         {
-            string value = SteamMatchmaking.GetLobbyData(lobbyId, key);
+            string value = SteamMatchmaking.GetLobbyData(lobby, key);
             if (!string.IsNullOrEmpty(value))
             {
                 GodotSteamworksLogger.LogInfo($"  {key}: {value}");
@@ -83,10 +84,10 @@ public partial class SteamworksLobby : Godot.RefCounted
 
         // List all lobby members
         GodotSteamworksLogger.LogInfo("  lobby_members:");
-        int memberCount = GetLobbyMemberCount(lobbyId.m_SteamID);
+        int memberCount = GetLobbyMemberCount(lobbyId);
         for (int i = 0; i < memberCount; i++)
         {
-            CSteamID memberId = SteamMatchmaking.GetLobbyMemberByIndex(lobbyId, i);
+            CSteamID memberId = SteamMatchmaking.GetLobbyMemberByIndex(lobby, i);
             string memberName = SteamFriends.GetFriendPersonaName(memberId);
             GodotSteamworksLogger.LogInfo($"    {i + 1}. {memberName} ({memberId})");
         }
@@ -123,6 +124,12 @@ public partial class SteamworksLobby : Godot.RefCounted
     /// <param name="lobbyType">Type of lobby (private, friends only, public, etc.)</param>
     public void CreateLobby(int maxMembers, ELobbyType lobbyType = ELobbyType.k_ELobbyTypeFriendsOnly)
     {
+        if (maxMembers > 250)
+        {
+            GodotSteamworksLogger.LogWarning("Max members exceeds Steam limit of 250. Setting to 250.");
+            maxMembers = 250;
+        }
+
         var godotSteam = GodotSteamworks.Instance;
         if (godotSteam == null || !godotSteam.IsInitalized)
         {
@@ -176,6 +183,23 @@ public partial class SteamworksLobby : Godot.RefCounted
         return SteamMatchmaking.GetLobbyData(lobbyId, key);
     }
 
+    public Dictionary<string, string> GetAllLobbyData(CSteamID lobbyId)
+    {
+        Dictionary<string, string> lobbyData = new Dictionary<string, string>();
+        int dataCount = SteamMatchmaking.GetLobbyDataCount(lobbyId);
+
+        for (int i = 0; i < dataCount; i++)
+        {
+            bool success = SteamMatchmaking.GetLobbyDataByIndex(lobbyId, i, out string key, 256, out string value, 256);
+            if (success)
+            {
+                lobbyData[key] = value;
+            }
+        }
+
+        return lobbyData;
+    }
+
     /// <summary>
     /// Sets data for the specified lobby (only lobby owner can do this)
     /// </summary>
@@ -218,11 +242,14 @@ public partial class SteamworksLobby : Godot.RefCounted
     private void OnLobbyDataUpdate(LobbyDataUpdate_t result)
     {
         GodotSteamworksLogger.LogInfo($"Lobby data updated for lobby: {result.m_ulSteamIDLobby}");
-
-        // Get the lobby ID as CSteamID for data retrieval
-        CSteamID lobbyId = new CSteamID(result.m_ulSteamIDLobby);
+        // TOOD: Log info for all current lobby data
     }
 
+    /// <summary>
+    /// Handler for when a lobby chat update occurs (player joins/leaves)
+    /// There are other hooks but currently only join/leave are handled.
+    /// </summary>
+    /// <param name="result"></param>
     private void OnLobbyChatUpdate(LobbyChatUpdate_t result)
     {
         CSteamID lobbyId = new CSteamID(result.m_ulSteamIDLobby);
@@ -262,6 +289,7 @@ public partial class SteamworksLobby : Godot.RefCounted
 
     private void OnGameLobbyJoinRequested(GameLobbyJoinRequested_t result)
     {
+        // TODO: What happens if the lobby is invalid? Handle this.
         GodotSteamworksLogger.LogInfo($"Received lobby join request: {result.m_steamIDLobby}");
         // Automatically join the requested lobby
         JoinLobby(result.m_steamIDLobby);
