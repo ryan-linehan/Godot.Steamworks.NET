@@ -26,6 +26,12 @@ public partial class GodotSteamworks : Node
     /// </summary>
     public bool IsInitalized { get; private set; } = false;
     /// <summary>
+    /// Whether to call SteamAPI.RunCallbacks() in the _Process method of the singleton.
+    /// If true, Steam callbacks will be handled automatically. Otherwise the user is expected
+    /// to call SteamAPI.RunCallbacks() manually. Defaults to true.
+    /// </summary>
+    public bool HandleSteamCallbacks { get; set; } = true;
+    /// <summary>
     /// Called when the node enters the scene tree for the first time.
     /// </summary>
     public override void _EnterTree()
@@ -38,6 +44,11 @@ public partial class GodotSteamworks : Node
             if (SteamAPI.Init())
             {
                 IsInitalized = true;
+                SetProcess(HandleSteamCallbacks);
+                if (!HandleSteamCallbacks)
+                {
+                    GodotSteamworksLogger.LogInfo("Automatic Steam callback handling is disabled. You must call SteamAPI.RunCallbacks() manually.");
+                }
                 GodotSteamworksLogger.LogInfo("Steamworks initialized successfully.");
             }
             else
@@ -58,3 +69,5 @@ public partial class GodotSteamworks : Node
         SteamAPI.RunCallbacks();
     }
 }
+
+
