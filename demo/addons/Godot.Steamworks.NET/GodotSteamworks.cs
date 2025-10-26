@@ -20,7 +20,7 @@ public partial class GodotSteamworks : Node
     /// <summary>
     /// Singleton instance of SteamworksLobby.
     /// </summary>
-    public static SteamworksLobby SteamworksLobbyInstance { get; private set; } = new SteamworksLobby();
+    public static SteamworksLobby Lobby { get; private set; } = new SteamworksLobby();
     /// <summary>
     /// Whether Steamworks has been successfully initialized or not
     /// </summary>
