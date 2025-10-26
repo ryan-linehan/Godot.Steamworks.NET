@@ -17,8 +17,12 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GodotSteam="*res://GodotSteam.cs"
+GodotSteamworksSingleton="*res://addons/Godot.Steamworks.NET/GodotSteamworksSingleton.cs"
 
 [dotnet]
 
 project/assembly_name="demo"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/Godot.Steamworks.NET/plugin.cfg")
