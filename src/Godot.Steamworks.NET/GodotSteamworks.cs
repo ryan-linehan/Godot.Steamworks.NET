@@ -9,7 +9,11 @@ namespace Godot.Steamworks.NET;
 public partial class GodotSteamworks : Node
 {
     /// <summary>
-    /// Singleton instance of GodotSteamWorks.
+    /// The current log level for GodotSteamworks logging
+    /// </summary>
+    public static LogLevel LogLevel { get; set; } = LogLevel.Info;
+    /// <summary>
+    /// Singleton instance of GodotSteamworks.
     /// </summary>
     public static GodotSteamworks Instance { get; private set; } = null!;
     /// <summary>
@@ -19,25 +23,22 @@ public partial class GodotSteamworks : Node
     {
         base._EnterTree();
         Instance = this;
-        GD.Print("[GodotSteamworks] Initialized Godot Steamworks.NET singleton.");
-        GD.Print("Steamworks: attempting initialization...");
         try
         {
-            GD.Print("Steam is running: " + SteamAPI.IsSteamRunning());
+            GodotSteamworksLogger.LogDebug("Steam is running: " + SteamAPI.IsSteamRunning());
             if (SteamAPI.Init())
             {
-                GD.Print("Steamworks initialization succeeded!");
+                GodotSteamworksLogger.LogInfo("Steamworks initialized successfully.");
             }
             else
             {
                 SteamAPI.InitEx(out var outSteamErrMsg);
-                GD.Print("Steamworks initialization failed! err: " + outSteamErrMsg);
+                GodotSteamworksLogger.LogError("Steamworks initialization failed! err: " + outSteamErrMsg);
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            GD.Print("Steamworks initialization threw an exception :O");
-            GD.Print(e);
+            GodotSteamworksLogger.LogError(ex.Message);
         }
     }
 }
