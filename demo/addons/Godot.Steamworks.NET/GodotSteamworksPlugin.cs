@@ -1,13 +1,14 @@
 using Godot;
 using System;
+namespace Godot.Steamworks.NET;
 
 [Tool]
 public partial class GodotSteamworksPlugin : EditorPlugin
 {
-	public const string GodotSteamworksAutoloadName = "GodotSteamworksSingleton";
+	public const string GodotSteamworksAutoloadName = "GodotSteamworks";
 	public override void _EnterTree()
 	{
-		AddAutoloadSingleton(GodotSteamworksAutoloadName, "res://addons/Godot.Steamworks.NET/GodotSteamworksSingleton.cs");
+		AddAutoloadSingleton(GodotSteamworksAutoloadName, "res://addons/Godot.Steamworks.NET/GodotSteamworks.cs");
 	}
 
 	public override void _ExitTree()

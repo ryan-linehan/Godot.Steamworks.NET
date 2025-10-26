@@ -1,10 +1,10 @@
-﻿using Godot;
+using System;
+using Godot;
 using Steamworks;
 namespace Godot.Steamworks.NET;
 
 /// <summary>
-/// Singleton class for Godot Steamworks.NET integration.
-/// A user should inherit from this class and add it as a global to their godot project to begin using steamworks features.
+/// Singleton class for Godot Steamworks.NET plugin for editor and runtime integration
 /// </summary>
 public partial class GodotSteamworks : Node
 {

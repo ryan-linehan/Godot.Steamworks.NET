@@ -1,7 +1,7 @@
 namespace Godot.Steamworks.NET;
 
 using Godot;
-internal static class GodotSteamworksLogger
+public static class GodotSteamworksLogger
 {
     public static void Log(string message, LogLevel level = LogLevel.Info)
     {
