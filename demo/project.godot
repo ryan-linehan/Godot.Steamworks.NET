@@ -10,10 +10,10 @@ config_version=5
 
 [application]
 
-config/name="Godot.Steamworks.NET Demo Proj"
+config/name="demo"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
 [dotnet]
 
-project/assembly_name="Godot.Steamworks.NET Demo Proj"
+project/assembly_name="demo"
