@@ -1,3 +1,6 @@
+demo/nuget/
+exports/
+
 # Godot 4+ specific ignores
 godot/
 **/.godot/

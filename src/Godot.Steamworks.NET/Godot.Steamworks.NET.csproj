@@ -25,9 +25,92 @@
   <ItemGroup>
     <PackageReference Include="GodotSharp" Version="[4.4.0, 4.6.0)" />
   </ItemGroup>
+
+  <!-- Reference Steamworks.NET assemblies -->
+  <ItemGroup>
+    <!-- Windows x64 Steamworks.NET assembly -->
+    <Reference Include="Steamworks.NET" Condition="'$(RuntimeIdentifier)' == 'win-x64' OR '$(RuntimeIdentifier)' == '' OR '$(RuntimeIdentifier)' == 'any'">
+      <HintPath>..\..\libs\Steamworks.NET\2025.162.1\Windows-x64\Steamworks.NET.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    
+    <!-- macOS/Linux Steamworks.NET assembly (fallback) -->
+    <Reference Include="Steamworks.NET" Condition="'$(RuntimeIdentifier)' == 'osx-x64' OR '$(RuntimeIdentifier)' == 'linux-x64'">
+      <HintPath>..\..\libs\Steamworks.NET\2025.162.1\OSX-Linux-x64\Steamworks.NET.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
+
+  <!-- Include Steamworks.NET native libraries and assemblies -->
+  <ItemGroup>
+    <!-- Windows x64 libraries -->
+    <Content Include="..\..\libs\Steamworks.NET\2025.162.1\Windows-x64\steam_api64.dll">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win-x64\native\steam_api64.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>steam_api64.dll</Link>
+    </Content>
+    
+    <!-- Include Steamworks.NET managed assembly for Windows -->
+    <Content Include="..\..\libs\Steamworks.NET\2025.162.1\Windows-x64\Steamworks.NET.dll">
+      <Pack>true</Pack>
+      <PackagePath>lib\net8.0\Steamworks.NET.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Steamworks.NET.dll</Link>
+    </Content>
+    
+    <Content Include="..\..\libs\Steamworks.NET\2025.162.1\Windows-x64\Steamworks.NET.dll">
+      <Pack>true</Pack>
+      <PackagePath>lib\net9.0\Steamworks.NET.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Steamworks.NET.dll</Link>
+    </Content>
+    
+    <Content Include="..\..\libs\Steamworks.NET\2025.162.1\Windows-x64\steam_appid.txt">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win-x64\native\steam_appid.txt</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>steam_appid.txt</Link>
+    </Content>
+    
+    <!-- macOS/Linux libraries -->
+    <Content Include="..\..\libs\Steamworks.NET\2025.162.1\OSX-Linux-x64\Steamworks.NET.dll">
+      <Pack>true</Pack>
+      <PackagePath>lib\net8.0\Steamworks.NET.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    
+    <Content Include="..\..\libs\Steamworks.NET\2025.162.1\OSX-Linux-x64\Steamworks.NET.dll">
+      <Pack>true</Pack>
+      <PackagePath>lib\net9.0\Steamworks.NET.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    
+    <Content Include="..\..\libs\Steamworks.NET\2025.162.1\OSX-Linux-x64\steam_appid.txt">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\osx-x64\native\steam_appid.txt</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    
+    <Content Include="..\..\libs\Steamworks.NET\2025.162.1\OSX-Linux-x64\steam_api.bundle\Contents\MacOS\libsteam_api.dylib">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\osx-x64\native\libsteam_api.dylib</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Include all files from steam_api.bundle for macOS -->
+  <ItemGroup>
+    <Content Include="..\..\libs\Steamworks.NET\2025.162.1\OSX-Linux-x64\steam_api.bundle\**\*.*">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\osx-x64\native\steam_api.bundle\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <Target Name="WriteVersionToFile" AfterTargets="Build">
     <WriteLinesToFile File="$(VersionFilePath)" Lines="$(Version)" Overwrite="true" />
   </Target>

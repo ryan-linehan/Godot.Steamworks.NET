@@ -1,12 +1,12 @@
 ﻿using Godot;
-
+using Steamworks;
 namespace Godot.Steamworks.NET;
 
 /// <summary>
 /// Singleton class for Godot Steamworks.NET integration.
 /// A user should inherit from this class and add it as a global to their godot project to begin using steamworks features.
 /// </summary>
-public partial class GodotSteamworks: Node
+public partial class GodotSteamworks : Node
 {
     /// <summary>
     /// Singleton instance of GodotSteamWorks.
@@ -20,5 +20,24 @@ public partial class GodotSteamworks: Node
         base._EnterTree();
         Instance = this;
         GD.Print("[GodotSteamworks] Initialized Godot Steamworks.NET singleton.");
+        GD.Print("Steamworks: attempting initialization...");
+        try
+        {
+            GD.Print("Steam is running: " + SteamAPI.IsSteamRunning());
+            if (SteamAPI.Init())
+            {
+                GD.Print("Steamworks initialization succeeded!");
+            }
+            else
+            {
+                SteamAPI.InitEx(out var outSteamErrMsg);
+                GD.Print("Steamworks initialization failed! err: " + outSteamErrMsg);
+            }
+        }
+        catch (Exception e)
+        {
+            GD.Print("Steamworks initialization threw an exception :O");
+            GD.Print(e);
+        }
     }
 }
