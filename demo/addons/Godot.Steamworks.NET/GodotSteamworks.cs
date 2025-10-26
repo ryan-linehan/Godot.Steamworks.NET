@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using Godot.Steamworks.NET.Multiplayer;
 using Steamworks;
 namespace Godot.Steamworks.NET;
 
@@ -13,9 +14,17 @@ public partial class GodotSteamworks : Node
     /// </summary>
     public static LogLevel LogLevel { get; set; } = LogLevel.Info;
     /// <summary>
-    /// Singleton instance of GodotSteamworks.
+    /// Singleton instance of GodotSteamworks
     /// </summary>
     public static GodotSteamworks Instance { get; private set; } = null!;
+    /// <summary>
+    /// Singleton instance of SteamworksLobby.
+    /// </summary>
+    public static SteamworksLobby SteamworksLobbyInstance { get; private set; } = new SteamworksLobby();
+    /// <summary>
+    /// Whether Steamworks has been successfully initialized or not
+    /// </summary>
+    public bool IsInitalized { get; private set; } = false;
     /// <summary>
     /// Called when the node enters the scene tree for the first time.
     /// </summary>
@@ -28,6 +37,7 @@ public partial class GodotSteamworks : Node
             GodotSteamworksLogger.LogDebug("Steam is running: " + SteamAPI.IsSteamRunning());
             if (SteamAPI.Init())
             {
+                IsInitalized = true;
                 GodotSteamworksLogger.LogInfo("Steamworks initialized successfully.");
             }
             else
@@ -40,5 +50,11 @@ public partial class GodotSteamworks : Node
         {
             GodotSteamworksLogger.LogError(ex.Message);
         }
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+        SteamAPI.RunCallbacks();
     }
 }
