@@ -1,0 +1,79 @@
+[gd_scene load_steps=4 format=3 uid="uid://del0dvsm2accj"]
+
+[ext_resource type="Script" uid="uid://b275c8mtu8f8r" path="res://UI/SteamLobbyMenu.cs" id="1_0stve"]
+[ext_resource type="PackedScene" uid="uid://4tbtr8sv7lsp" path="res://UI/LobbyList.tscn" id="2_ugirv"]
+[ext_resource type="PackedScene" uid="uid://blx5clon42ox6" path="res://UI/LobbyMembersList.tscn" id="3_kv2r6"]
+
+[node name="SteamLobbyMenu" type="Control" node_paths=PackedStringArray("CreateLobbyButton", "JoinLobbyButton", "BackButton", "StartGameButton", "LobbyListMenu", "LobbyMembersListMenu", "LobbyIdLabel")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0stve")
+CreateLobbyButton = NodePath("CreateOrJoin/CreateLobby")
+JoinLobbyButton = NodePath("CreateOrJoin/JoinLobby")
+BackButton = NodePath("CreateOrJoin/BackButton")
+StartGameButton = NodePath("CreateOrJoin/StartGame")
+LobbyListMenu = NodePath("LobbyList")
+LobbyMembersListMenu = NodePath("LobbyMembersList")
+LobbyIdLabel = NodePath("CurrentLobbyLabel/CurrentLobbyIdLabel")
+
+[node name="CreateOrJoin" type="VBoxContainer" parent="."]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CreateLobby" type="Button" parent="CreateOrJoin"]
+layout_mode = 2
+text = "Create Lobby"
+
+[node name="JoinLobby" type="Button" parent="CreateOrJoin"]
+layout_mode = 2
+text = "Join Lobby"
+
+[node name="StartGame" type="Button" parent="CreateOrJoin"]
+visible = false
+layout_mode = 2
+text = "Start Game"
+
+[node name="BackButton" type="Button" parent="CreateOrJoin"]
+visible = false
+layout_mode = 2
+text = "Back"
+
+[node name="LobbyList" parent="." instance=ExtResource("2_ugirv")]
+layout_mode = 1
+offset_left = 719.0
+offset_top = 36.0
+offset_right = -93.0
+offset_bottom = -54.0
+
+[node name="LobbyMembersList" parent="." instance=ExtResource("3_kv2r6")]
+layout_mode = 1
+offset_left = 719.0
+offset_top = 37.0
+offset_right = -89.0
+offset_bottom = -55.0
+
+[node name="CurrentLobbyLabel" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="StaticLobbyLabel" type="Label" parent="CurrentLobbyLabel"]
+layout_mode = 2
+text = "Current Steam Lobby: "
+
+[node name="CurrentLobbyIdLabel" type="Label" parent="CurrentLobbyLabel"]
+layout_mode = 2
+text = "none"

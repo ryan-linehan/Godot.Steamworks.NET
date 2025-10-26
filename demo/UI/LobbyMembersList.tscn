@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://blx5clon42ox6"]
+
+[ext_resource type="Script" uid="uid://nogksg1f2hj7" path="res://UI/LobbyMembersList.cs" id="1_t5t5f"]
+
+[node name="LobbyMembersList" type="Panel" node_paths=PackedStringArray("_membersListContainer")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_t5t5f")
+_membersListContainer = NodePath("MarginContainer/VBoxContainer/ScrollContainer/MembersVBox")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MembersVBox" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
