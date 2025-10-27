@@ -1,0 +1,184 @@
+# Sourced from: https://github.com/abarichello/godot-ci/blob/master/.github/workflows/godot-ci.yml
+name: "Build and Publish Steam Game"
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+# NOTE: If your `project.godot` is at the repository root, set `PROJECT_PATH` below to ".".
+env:
+    GODOT_VERSION: 4.5.1
+    EXPORT_NAME: demo
+    PROJECT_PATH: demo
+
+jobs:
+    export-windows:
+        name: Windows Export
+        runs-on: ubuntu-22.04 # Use 22.04 with godot 4
+        container:
+            image: barichello/godot-ci:mono-4.5.1 #cannot variable interpolate here unfortunately
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  lfs: true
+
+            - name: Setup
+              run: |
+                  mkdir -v -p ~/.local/share/godot/export_templates/
+                  mkdir -v -p ~/.config/
+                  mv /root/.config/godot ~/.config/godot
+                  mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono
+
+            - name: Windows Build
+              run: |
+                  mkdir -v -p build/windows
+                  EXPORT_DIR="$(readlink -f build)"
+                  cd $PROJECT_PATH
+
+                  # Set environment variable that MSBuild can read
+                  export STEAM_TARGET_PLATFORM=Windows
+
+                  # Export (Godot will trigger the build and our MSBuild target will see the env var)
+                  godot --headless --verbose --export-release "Windows Desktop" "$EXPORT_DIR/windows/$EXPORT_NAME.exe"
+
+            - name: Upload Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: windows
+                  path: build/windows
+
+    # export-linux:
+    #   name: Linux Export
+    #   runs-on: ubuntu-22.04  # Use 22.04 with godot 4
+    #   needs: restore-cache
+    #   container:
+    #     barichello/godot-ci:mono-4.4.1
+    #   steps:
+    #     - name: Checkout
+    #       uses: actions/checkout@v4
+    #       with:
+    #         lfs: true
+    #
+    #     - name: Linux Build
+    #       run: |
+    #         # Set up X11 for any Aseprite usage during build
+    #         export DISPLAY=:99
+    #         Xvfb :99 -screen 0 1024x768x24 -ac +extension GLX +render -noreset &
+    #         sleep 3
+
+    #         mkdir -v -p build/linux
+    #         EXPORT_DIR="$(readlink -f build)"
+    #         cd $PROJECT_PATH
+    #         godot --headless --verbose --export-release "Linux/X11" "$EXPORT_DIR/linux/$EXPORT_NAME.x86_64"
+    #     - name: Upload Artifact
+    #       uses: actions/upload-artifact@v4
+    #       with:
+    #         name: linux
+    #         path: build/linux
+
+    # export-mac:
+    # name: Mac Export
+    # runs-on: ubuntu-22.04  # Use 22.04 with godot 4
+    # needs: restore-cache
+    # container:
+    #   barichello/godot-ci:mono-4.4.1
+    # steps:
+    #   - name: Checkout
+    #     uses: actions/checkout@v4
+    #     with:
+    #       lfs: true
+    #
+    #   - name: Mac Build
+    #     run: |
+    #       # Set up X11 for any Aseprite usage during build
+    #       export DISPLAY=:99
+    #       Xvfb :99 -screen 0 1024x768x24 -ac +extension GLX +render -noreset &
+    #       sleep 3
+
+    #       mkdir -v -p build/mac
+    #       EXPORT_DIR="$(readlink -f build)"
+    #       cd $PROJECT_PATH
+    #       godot --headless --verbose --export-release "macOS" "$EXPORT_DIR/mac/$EXPORT_NAME.zip"
+    #   - name: Upload Artifact
+    #     uses: actions/upload-artifact@v4
+    #     with:
+    #       name: mac
+    #       path: build/mac
+
+    # Steam upload job:
+    #  - https://github.com/game-ci/steam-deploy#configuration
+    #  - https://partner.steamgames.com/doc/sdk/uploading#1
+    deploy-to-steam:
+        needs: [export-windows]
+        runs-on: ubuntu-latest
+        steps:
+            - name: Download Windows Artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: windows
+                  path: build/windows
+            # - name: Download Mac Artifact
+            #   uses: actions/download-artifact@v4
+            #   with:
+            #     name: mac
+            #     path: build/mac
+            # - name: Download Linux Artifact
+            #   uses: actions/download-artifact@v4
+            #   with:
+            #     name: linux
+            #     path: build/linux
+            # - name: Unzip Mac Build
+            #   run: |
+            #     unzip -o build/mac/here_for_the_signal.zip -d build/mac/
+            #     rm build/mac/here_for_the_signal.zip
+            - name: Upload to steam
+              uses: game-ci/steam-deploy@v3
+              with:
+                  username: ${{ vars.STEAM_USER }}
+                  configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
+                  appId: ${{ vars.STEAM_APP_ID }}
+                  buildDescription: v1.2.3
+                  rootPath: build
+                  depot1Path: windows
+                  # depot2Path: mac
+                  # depot3Path: linux
+                  releaseBranch: steam_multiplayer
+# TODO: Android upload job
+# TODO: iOS upload job (once supported by https://github.com/abarichello/godot-ci/blob/master/.github/workflows/godot-ci.yml)
+# TODO: Web export job (once C# is supported)
+
+# At the moment c# web exports are not quite supported - eventually we  expect it will and we may want to add it back in
+# export-web:
+#   name: Web Export
+#   runs-on: ubuntu-22.04  # Use 22.04 with godot 4
+#   container:
+#     barichello/godot-ci:mono-4.4.1
+#   steps:
+#     - name: Checkout
+#       uses: actions/checkout@v4
+#       with:
+#         lfs: true
+#     - name: Setup
+#       run: |
+#         mkdir -v -p ~/.local/share/godot/export_templates/
+#         mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono
+#     - name: Web Build
+#       run: |
+#         mkdir -v -p build/web
+#         EXPORT_DIR="$(readlink -f build)"
+#         cd $PROJECT_PATH
+#         godot --headless --verbose --export-release "Web" "$EXPORT_DIR/web/index.html"
+#     - name: Upload Artifact
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: web
+#         path: build/web
+#     - name: Install rsync 📚
+#       run: |
+#         apt-get update && apt-get install -y rsync
+#     - name: Deploy to GitHub Pages 🚀
+#       uses: JamesIves/github-pages-deploy-action@releases/v4
+#       with:
+#         branch: gh-pages # The branch the action should deploy to.
+#         folder: build/web # The folder the action should deploy.
