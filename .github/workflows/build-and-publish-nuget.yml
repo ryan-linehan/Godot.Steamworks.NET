@@ -5,6 +5,10 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  id-token: write   # Required for OIDC authentication
+  contents: read    # Required to checkout code
+
 jobs:
   restore_build_pack_and_publish:
     name: Restore, Build, Pack and Publish
@@ -15,6 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
+          lfs: true
 
       - name: Set up .net
         uses: actions/setup-dotnet@v4
@@ -39,9 +44,15 @@ jobs:
             --configuration Release \
             --output ./src/GodotSteamworks.NET/bin/Release
 
-      - name: Publish to nuget
+      # Get a short-lived NuGet API key
+      - name: NuGet login (OIDC → temp API key)
         if: env.VERSION_CHANGED == 'true'
-        env:
-          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_ORG_API_TOKEN }}
-        run: |
-          dotnet nuget push ./src/GodotSteamworks.NET/bin/Release/*.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_AUTH_TOKEN
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ vars.NUGET_USER }} # Your nuget.org username (profile name), NOT your email address
+      
+      # Push the package using the temporary API key
+      - name: NuGet push
+        if: env.VERSION_CHANGED == 'true'
+        run: dotnet nuget push ./src/GodotSteamworks.NET/bin/Release/*.nupkg --api-key ${{ steps.login.outputs.api-key }} --source https://api.nuget.org/v3/index.json
