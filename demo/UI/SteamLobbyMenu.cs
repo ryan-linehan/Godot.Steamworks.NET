@@ -76,7 +76,7 @@ public partial class SteamLobbyMenu : Control
                  && !GodotSteamworks.Lobby.IsLobbyOwner(_lobbyId))
             {
                 // Signal to start peer connection as client
-                EmitSignal(SignalName.SignalStartGame, _lobbyId);
+                EmitSignal(SignalName.SignalJoinGame, _lobbyId);
             }
         };
     }

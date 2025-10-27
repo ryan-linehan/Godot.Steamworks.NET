@@ -365,9 +365,9 @@ public partial class SteamworksLobby : Godot.RefCounted
     /// </summary>
     /// <param name="lobbyId">The lobby to make joinable</param>
     /// <param name="joinable">Whether the lobby should be joinable</param>
-    public void SetLobbyJoinable(CSteamID lobbyId, bool joinable)
+    public void SetLobbyJoinable(ulong lobbyId, bool joinable)
     {
-        SteamMatchmaking.SetLobbyJoinable(lobbyId, joinable);
+        SteamMatchmaking.SetLobbyJoinable(new CSteamID(lobbyId), joinable);
     }
 
     /// <summary>
