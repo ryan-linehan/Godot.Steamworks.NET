@@ -3,9 +3,9 @@ using Steamworks;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Godot.Steamworks.NET.Models;
-using Godot.Steamworks.NET.Util;
-namespace Godot.Steamworks.NET.Multiplayer;
+using Godot.Steamworks.Net.Models;
+using Godot.Steamworks.Net.Util;
+namespace Godot.Steamworks.Net.Multiplayer;
 
 
 

@@ -1,5 +1,5 @@
 using Godot;
-namespace Godot.Steamworks.NET.Models;
+namespace Godot.Steamworks.Net.Models;
 public partial class LobbyMember : Godot.RefCounted
 {
     /// <summary>
@@ -9,5 +9,5 @@ public partial class LobbyMember : Godot.RefCounted
     /// <summary>
     /// The steam friends list name for the lobby member
     /// </summary>
-    public string SteamDisplayName { get; set; }
+    public string SteamDisplayName { get; set; } = null!;
 }

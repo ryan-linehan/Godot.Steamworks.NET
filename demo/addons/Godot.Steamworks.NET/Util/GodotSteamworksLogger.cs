@@ -1,4 +1,4 @@
-namespace Godot.Steamworks.NET;
+namespace Godot.Steamworks.Net;
 
 using Godot;
 public static class GodotSteamworksLogger

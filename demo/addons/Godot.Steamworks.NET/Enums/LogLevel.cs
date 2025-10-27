@@ -1,4 +1,4 @@
-namespace Godot.Steamworks.NET;
+namespace Godot.Steamworks.Net;
 
 /// <summary>
 /// Log level enumeration for GodotSteamworks logging.

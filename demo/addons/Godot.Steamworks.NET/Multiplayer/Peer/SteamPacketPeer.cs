@@ -2,7 +2,7 @@ using System;
 using Godot;
 using Steamworks;
 
-namespace Godot.Steamworks.NET.Multiplayer.Peer;
+namespace Godot.Steamworks.Net.Multiplayer.Peer;
 
 /// <summary>
 /// A packet peer implementation for Steam networking that stores packet data and metadata.
@@ -18,7 +18,7 @@ public partial class SteamPacketPeer : RefCounted
     /// <summary>
     /// The packet data buffer
     /// </summary>
-    public byte[] Data { get; private set; }
+    public byte[] Data { get; private set; } = new byte[MaxSteamPacketSize];
 
     /// <summary>
     /// The actual size of the data in the packet
@@ -40,8 +40,6 @@ public partial class SteamPacketPeer : RefCounted
     /// </summary>
     public SteamPacketPeer()
     {
-        Data = new byte[MaxSteamPacketSize];
-        Size = 0;
     }
 
     /// <summary>

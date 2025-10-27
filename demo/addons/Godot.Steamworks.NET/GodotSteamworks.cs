@@ -1,8 +1,8 @@
 using System;
 using Godot;
-using Godot.Steamworks.NET.Multiplayer;
+using Godot.Steamworks.Net.Multiplayer;
 using Steamworks;
-namespace Godot.Steamworks.NET;
+namespace Godot.Steamworks.Net;
 
 /// <summary>
 /// Singleton class for Godot Steamworks.NET plugin for editor and runtime integration

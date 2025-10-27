@@ -1,7 +1,6 @@
 using Godot;
-using Godot.Steamworks.NET;
+using Godot.Steamworks.Net;
 using System;
-
 public partial class Game : Node
 {
     [Export]

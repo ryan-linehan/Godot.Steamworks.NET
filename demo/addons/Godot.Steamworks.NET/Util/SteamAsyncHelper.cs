@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Steamworks;
 
-namespace Godot.Steamworks.NET.Util;
+namespace Godot.Steamworks.Net.Util;
 /// <summary>
 /// Helper class to convert Steam CallResults to async/await pattern
 /// </summary>

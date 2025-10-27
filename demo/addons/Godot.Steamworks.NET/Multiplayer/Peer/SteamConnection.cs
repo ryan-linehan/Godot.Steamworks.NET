@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Godot;
 using Steamworks;
 
-namespace Godot.Steamworks.NET.Multiplayer.Peer;
+namespace Godot.Steamworks.Net.Multiplayer.Peer;
 
 /// <summary>
 /// Represents a Steam networking connection to another peer

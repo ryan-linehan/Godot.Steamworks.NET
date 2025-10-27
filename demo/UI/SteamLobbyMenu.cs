@@ -1,4 +1,4 @@
-using Godot.Steamworks.NET;
+using Godot.Steamworks.Net;
 using Godot;
 using Steamworks;
 

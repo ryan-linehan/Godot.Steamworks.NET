@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
 
     <!-- NuGet Package Metadata -->
-    <PackageId>Godot.Steamworks.NET</PackageId>
+    <PackageId>GodotSteamworks.NET</PackageId>
     <Version>2025.162.1-beta-001</Version>
     <Authors>RcubDev</Authors>
     <Description>
@@ -14,9 +14,9 @@
     <Copyright>Copyright © 2025 RcubDev</Copyright>
     <PackageTags>godot;steamworks.net;steam;steamworks</PackageTags>
     <IncludeBuildOutput>true</IncludeBuildOutput>
-    <RepositoryUrl>https://github.com/RcubDev/Godot.Steamworks.NET</RepositoryUrl>
+    <RepositoryUrl>https://github.com/RcubDev/GodotSteamworks.NET</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/RcubDev/Godot.Steamworks.NET</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/RcubDev/GodotSteamworks.NET</PackageProjectUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <VersionFilePath>$(MSBuildThisFileDirectory)..\..\version.txt</VersionFilePath>

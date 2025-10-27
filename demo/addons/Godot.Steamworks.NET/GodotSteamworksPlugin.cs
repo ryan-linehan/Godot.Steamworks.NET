@@ -1,6 +1,6 @@
 using Godot;
 using System;
-namespace Godot.Steamworks.NET;
+namespace Godot.Steamworks.Net;
 
 [Tool]
 public partial class GodotSteamworksPlugin : EditorPlugin

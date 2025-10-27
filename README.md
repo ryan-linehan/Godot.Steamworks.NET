@@ -1,4 +1,4 @@
-# Godot.Steamworks.NET
+# GodotSteamworks.NET
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Godot](https://img.shields.io/badge/Godot-4.4%2B-blue)](https://godotengine.org/)

@@ -1,4 +1,4 @@
-REM This batch file automates building and placing local changes in the Godot.Steamworks.NET project and its demo project.
+REM This batch file automates building and placing local changes in the GodotSteamworks.NET project and its demo project.
 @echo off
 
 REM Read the version from the file first
@@ -8,7 +8,7 @@ if not exist %version_file% (
     exit /b
 )
 
-REM Read the version from the file that outputs on Godot.Steamworks.NET build
+REM Read the version from the file that outputs on GodotSteamworks.NET build
 set /p nuget_version=< version.txt
 
 if "%nuget_version%" == "" (
@@ -29,14 +29,14 @@ if "%continue%" == "y" (
 )
 
 REM Navigate to the first folder and run a dotnet command
-echo Changing directories to src/Godot.Steamworks.NET
-cd src/Godot.Steamworks.NET
+echo Changing directories to src/GodotSteamworks.NET
+cd src/GodotSteamworks.NET
 
-echo restoring Godot.Steamworks.NET version %nuget_version%
+echo restoring GodotSteamworks.NET version %nuget_version%
 dotnet restore
-echo building Godot.Steamworks.NET version %nuget_version%
+echo building GodotSteamworks.NET version %nuget_version%
 dotnet build --configuration Release --no-restore
-echo packing Godot.Steamworks.NET version %nuget_version%
+echo packing GodotSteamworks.NET version %nuget_version%
 dotnet pack --configuration Release --output ../../demo/nuget
 echo nuget pack completed
 
@@ -50,7 +50,7 @@ set local_source_path=%cd%\nuget
 echo Adding local nuget source: %local_source_path%
 dotnet nuget add source "%local_source_path%" --name "demo-local" 2>nul || echo Local source already exists or failed to add
 
-dotnet add package Godot.Steamworks.NET --version %nuget_version%
+dotnet add package GodotSteamworks.NET --version %nuget_version%
 dotnet clean
 dotnet build
 
