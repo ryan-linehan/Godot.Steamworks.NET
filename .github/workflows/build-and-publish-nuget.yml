@@ -52,9 +52,20 @@ jobs:
         uses: NuGet/login@v1
         id: login
         with:
-          user: ${{ vars.NUGET_USER }} # Your nuget.org username (profile name), NOT your email address
+          user: RcubDev
+
+      # Debug: Check what outputs and env vars are available
+      - name: Debug login outputs and env
+        if: env.VERSION_CHANGED == 'true'
+        run: |
+          echo "=== Environment Variables ==="
+          env | grep -i nuget || echo "No NUGET env vars"
+          echo "=== Step Outputs ==="
+          echo "api-key output: '${{ steps.login.outputs.api-key }}'"
+          echo "token output: '${{ steps.login.outputs.token }}'"
+          echo "outcome: ${{ steps.login.outcome }}"
       
-      # Push the package using the temporary API key
+      # Push the package - try using environment variable if available
       - name: NuGet push
         if: env.VERSION_CHANGED == 'true'
         run: dotnet nuget push ./src/GodotSteamworks.NET/bin/Release/*.nupkg --api-key ${{ steps.login.outputs.api-key }} --source https://api.nuget.org/v3/index.json
