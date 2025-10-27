@@ -14,6 +14,12 @@ public partial class SteamLobbyMenu : Control
     [Signal]
     public delegate void SignalStartGameEventHandler(ulong lobbyId);
     /// <summary>
+    /// Signals that the game should start and join the given lobby id
+    /// </summary>
+    /// <param name="lobbyId"></param>
+    [Signal]
+    public delegate void SignalJoinGameEventHandler(ulong lobbyId);
+    /// <summary>
     /// Button to create a lobby
     /// </summary>
     [Export]
@@ -58,9 +64,26 @@ public partial class SteamLobbyMenu : Control
         CreateLobbyButton.Pressed += OnCreateLobbyButtonPressed;
         JoinLobbyButton.Pressed += OnJoinLobbyButtonPressed;
         BackButton.Pressed += OnBackButtonPressed;
+        StartGameButton.Pressed += OnStartGameButtonPressed;
 
         // Subscribe to lobby joined event to update UI accordingly
         GodotSteamworks.Lobby.LobbyJoined += OnLobbyJoined;
+        GodotSteamworks.Lobby.LobbyDataUpdatedDetailed += (lobbyData) =>
+        {
+            // Update the members list when lobby data is updated
+            if (lobbyData.TryGetValue("host_ready", out string hostReady)
+                 && bool.TryParse(hostReady, out bool isReady) && isReady
+                 && !GodotSteamworks.Lobby.IsLobbyOwner(_lobbyId))
+            {
+                // Signal to start peer connection as client
+                EmitSignal(SignalName.SignalStartGame, _lobbyId);
+            }
+        };
+    }
+
+    private void OnStartGameButtonPressed()
+    {
+        EmitSignal(SignalName.SignalStartGame, _lobbyId);
     }
 
     private void OnBackButtonPressed()
