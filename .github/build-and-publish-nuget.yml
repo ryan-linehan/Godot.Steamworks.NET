@@ -1,0 +1,54 @@
+name: Build & Publish Package
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  restore_build_pack_and_publish:
+    name: Restore, Build, Pack and Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          lfs: true
+
+      - name: Set up .net
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Verify LFS files
+        run: |
+          echo "Checking LFS file sizes..."
+          ls -la libs/Steamworks.NET/2025.162.1/Windows-x64/
+          file libs/Steamworks.NET/2025.162.1/Windows-x64/Steamworks.NET.dll
+
+      - name: Check if version.txt has changed
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manually triggered. Skipping version.txt check."
+            echo "VERSION_CHANGED=true" >> $GITHUB_ENV
+          elif git diff --quiet HEAD^ HEAD -- version.txt; then
+            echo "VERSION_CHANGED=false" >> $GITHUB_ENV
+          else
+            echo "VERSION_CHANGED=true" >> $GITHUB_ENV
+          fi
+
+      - name: restore, build, pack GodotSteamworks.NET
+        run: |
+          dotnet restore ./src/GodotSteamworks.NET/GodotSteamworks.NET.csproj
+          dotnet pack ./src/GodotSteamworks.NET/GodotSteamworks.NET.csproj \
+            --configuration Release \
+            --output ./src/GodotSteamworks.NET/bin/Release
+
+      - name: Publish to nuget
+        if: env.VERSION_CHANGED == 'true'
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_ORG_API_TOKEN }}
+        run: |
+          dotnet nuget push ./src/GodotSteamworks.NET/bin/Release/*.nupkg --source https://api.nuget.org/v3/index.json --api-key $NUGET_AUTH_TOKEN
