@@ -11,7 +11,6 @@ namespace Godot.Steamworks.NET.Multiplayer;
 
 public partial class SteamworksLobby : Godot.RefCounted
 {
-
     /// <summary>
     /// Signal emitted when a lobby is created.
     /// </summary>
@@ -57,6 +56,17 @@ public partial class SteamworksLobby : Godot.RefCounted
     /// <param name="lobbyIds">Array of lobby IDs found</param>
     [Signal]
     public delegate void LobbySearchCompletedEventHandler(Godot.Collections.Array<ulong> lobbyIds);
+    /// <summary>
+    /// Signal emitted when lobby data is updated.
+    /// </summary>
+    [Signal]
+    public delegate void LobbyDataUpdatedEventHandler();
+    /// <summary>
+    /// Signal emitted when lobby data is updated and <see cref="DetailedLobbyData"/> is true.
+    /// Both <see cref="LobbyDataUpdated"/> and <see cref="LobbyDataUpdatedDetailed"/> are emitted.
+    /// </summary>
+    [Signal]
+    public delegate void LobbyDataUpdatedDetailedEventHandler(Godot.Collections.Dictionary<string, string> lobbyData);
     // These references MUST be kept to prevent garbage collection of Steam callbacks
 #pragma warning disable IDE0052 // Remove unread private members
     // CallResults
@@ -71,6 +81,12 @@ public partial class SteamworksLobby : Godot.RefCounted
     private Callback<GameLobbyJoinRequested_t> gameLobbyJoinRequestedCallback = null!;
 #pragma warning restore IDE0052 // Remove unread private members
 
+    /// <summary>
+    /// Indicates if the detailed lobby data should be fetched and provided in the LobbyDataUpdatedDetailed signal.
+    /// On by default.
+    ///     - Turn off if you want to optimize performance and do not need detailed lobby data
+    /// </summary>
+    public bool DetailedLobbyData { get; set; } = true;
     public SteamworksLobby()
     {
         lobbyCreatedCallResult = CallResult<LobbyCreated_t>.Create(OnLobbyCreated);
@@ -189,6 +205,16 @@ public partial class SteamworksLobby : Godot.RefCounted
         CSteamID ownerCSteamId = SteamMatchmaking.GetLobbyOwner(lobbyCSteamId);
         // TODO: What happens if it is an invalid lobby id? Handle this.
         return ownerCSteamId.m_SteamID;
+    }
+
+    /// <summary>
+    /// Checks if the current user is the owner of the specified lobby
+    /// </summary>
+    public bool IsLobbyOwner(ulong lobbyId)
+    {
+        CSteamID lobbyCSteamId = new CSteamID(lobbyId);
+        CSteamID ownerCSteamId = SteamMatchmaking.GetLobbyOwner(lobbyCSteamId);
+        return ownerCSteamId == SteamUser.GetSteamID();
     }
 
     /// <summary>
@@ -355,9 +381,12 @@ public partial class SteamworksLobby : Godot.RefCounted
         return SteamMatchmaking.GetLobbyData(lobbyId, key);
     }
 
-    public Dictionary<string, string> GetAllLobbyData(CSteamID lobbyId)
+    /// <summary>
+    /// Gets all data from the specified lobby by getting index
+    /// </summary>
+    public Godot.Collections.Dictionary<string, string> GetAllLobbyData(CSteamID lobbyId)
     {
-        Dictionary<string, string> lobbyData = new Dictionary<string, string>();
+        Godot.Collections.Dictionary<string, string> lobbyData = new Godot.Collections.Dictionary<string, string>();
         int dataCount = SteamMatchmaking.GetLobbyDataCount(lobbyId);
 
         for (int i = 0; i < dataCount; i++)
@@ -387,7 +416,12 @@ public partial class SteamworksLobby : Godot.RefCounted
     private void OnLobbyDataUpdate(LobbyDataUpdate_t result)
     {
         GodotSteamworksLogger.LogInfo($"Lobby data updated for lobby: {result.m_ulSteamIDLobby}");
-        // TOOD: Log info for all current lobby data
+        EmitSignal(SignalName.LobbyDataUpdated);
+        if (DetailedLobbyData)
+        {
+            var lobbyData = GetAllLobbyData(new CSteamID(result.m_ulSteamIDLobby));
+            EmitSignal(SignalName.LobbyDataUpdatedDetailed, lobbyData);
+        }
     }
 
     /// <summary>
