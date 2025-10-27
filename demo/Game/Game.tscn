@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://dag7erv1whfoi"]
+[gd_scene load_steps=3 format=3 uid="uid://dag7erv1whfoi"]
 
 [ext_resource type="Script" uid="uid://bjw4yur54plej" path="res://Game/Game.cs" id="1_hqwdr"]
-[ext_resource type="PackedScene" uid="uid://dpsy8glhieadt" path="res://Game/Player.tscn" id="2_vrr3t"]
 [ext_resource type="Script" uid="uid://dbnt62d0j2834" path="res://Game/PeerStatusLabel.cs" id="3_iv3md"]
 
 [node name="Game" type="Node" node_paths=PackedStringArray("World")]
@@ -10,10 +9,6 @@ World = NodePath("World")
 
 [node name="World" type="Node2D" parent="."]
 visible = false
-
-[node name="Player1" parent="World" instance=ExtResource("2_vrr3t")]
-
-[node name="Player2" type="Node2D" parent="World"]
 
 [node name="HUD" type="MarginContainer" parent="."]
 anchors_preset = 15
