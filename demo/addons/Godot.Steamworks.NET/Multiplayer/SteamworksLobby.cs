@@ -407,9 +407,9 @@ public partial class SteamworksLobby : Godot.RefCounted
     /// <param name="lobbyId">The lobby to set data for</param>
     /// <param name="key">Data key</param>
     /// <param name="value">Data value</param>
-    public void SetLobbyData(CSteamID lobbyId, string key, string value)
+    public void SetLobbyData(ulong lobbyId, string key, string value)
     {
-        SteamMatchmaking.SetLobbyData(lobbyId, key, value);
+        SteamMatchmaking.SetLobbyData(new CSteamID(lobbyId), key, value);
     }
 
 

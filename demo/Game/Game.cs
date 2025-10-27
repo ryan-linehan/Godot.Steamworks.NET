@@ -38,6 +38,7 @@ public partial class Game : Node
             {
                 Multiplayer.MultiplayerPeer = steamMultiplayerPeer;
                 GD.Print("Hosting via Steam P2P successful");
+                GodotSteamworks.Lobby.SetLobbyData(SteamLobbyId, "host_ready", "true");
             }
         }
         catch (Exception ex)
