@@ -4,7 +4,7 @@ using System;
 public partial class Game : Node
 {
     [Export]
-    public Node2D World { get; set; } = null;
+    public Node2D World { get; set; } = null!;
     public ulong SteamLobbyId { get; set; }
     public override void _Ready()
     {

@@ -12,9 +12,9 @@ public partial class LobbyList : Panel
     public delegate void SignalLobbyJoinedEventHandler(ulong lobbyId);
     private bool _isJoining = false;
     [Export]
-    VBoxContainer _lobbyListContainer;
+    VBoxContainer _lobbyListContainer = null!;
     [Export]
-    public Label _loadingLabel;
+    public Label _loadingLabel = null!;
     public override void _Ready()
     {
         Visible = false;

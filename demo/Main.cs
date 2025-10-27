@@ -4,9 +4,9 @@ using System;
 public partial class Main : Node
 {
     [Export]
-    SteamLobbyMenu SteamLobbyMenu;
+    SteamLobbyMenu SteamLobbyMenu = null!;
     [Export]
-    Game Game;
+    Game Game = null!;
     public override void _Ready()
     {
         SteamLobbyMenu.SignalStartGame += OnStartGame;

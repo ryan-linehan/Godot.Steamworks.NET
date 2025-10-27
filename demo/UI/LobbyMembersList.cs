@@ -5,7 +5,7 @@ using System;
 public partial class LobbyMembersList : Panel
 {
     [Export]
-    VBoxContainer _membersListContainer;
+    VBoxContainer _membersListContainer = null!;
     public override void _Ready()
     {
         Visible = false;

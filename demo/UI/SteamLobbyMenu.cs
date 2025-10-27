@@ -23,37 +23,37 @@ public partial class SteamLobbyMenu : Control
     /// Button to create a lobby
     /// </summary>
     [Export]
-    public Button CreateLobbyButton;
+    public Button CreateLobbyButton = null!;
     /// <summary>
     /// Button to join a lobby
     /// </summary>
     [Export]
-    public Button JoinLobbyButton;
+    public Button JoinLobbyButton = null!;
     /// <summary>
     /// Button to go back from lobby members list to lobby list
     /// </summary>
     [Export]
-    public Button BackButton;
+    public Button BackButton = null!;
     /// <summary>
     /// Button that starts the actual game for p2p connection via steam
     /// </summary>
     [Export]
-    public Button StartGameButton;
+    public Button StartGameButton = null!;
     /// <summary>
     /// Control to show the lobbies available for steam user to join
     /// </summary>
     [Export]
-    public LobbyList LobbyListMenu;
+    public LobbyList LobbyListMenu = null!;
     /// <summary>
     /// Control to show the members of the current lobby the steam user is in
     /// </summary>
     [Export]
-    public LobbyMembersList LobbyMembersListMenu;
+    public LobbyMembersList LobbyMembersListMenu = null!;
     /// <summary>
     /// Label that shows the current lobby id
     /// </summary>
     [Export]
-    public Label LobbyIdLabel;
+    public Label LobbyIdLabel = null!;
     private ulong _lobbyId = 0;
     override public void _Ready()
     {
@@ -71,8 +71,8 @@ public partial class SteamLobbyMenu : Control
         GodotSteamworks.Lobby.LobbyDataUpdatedDetailed += (lobbyData) =>
         {
             // Update the members list when lobby data is updated
-            if (lobbyData.TryGetValue("host_ready", out string hostReady)
-                 && bool.TryParse(hostReady, out bool isReady) && isReady
+            if (lobbyData.TryGetValue("host_ready", out string? hostReady)
+                 && hostReady != null && bool.TryParse(hostReady, out bool isReady) && isReady
                  && !GodotSteamworks.Lobby.IsLobbyOwner(_lobbyId))
             {
                 // Signal to start peer connection as client
