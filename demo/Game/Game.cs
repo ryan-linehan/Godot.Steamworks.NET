@@ -13,7 +13,20 @@ public partial class Game : Node
     {
         base._Ready();
         World.Visible = false;
+        Multiplayer.PeerConnected += OnPeerConnected;
     }
+
+    private void OnPeerConnected(long id)
+    {
+        GD.Print($"Peer Connected: {id}" + "Self id: " + Multiplayer.GetUniqueId());
+        GD.Print("Joined via Steam P2P successful");
+        if(Multiplayer.IsServer())
+        {
+            PlayerJoined(id);
+        }
+    }
+
+
     public void StartGame()
     {
         GD.Print("Game Started!");
@@ -38,7 +51,7 @@ public partial class Game : Node
             var steamErr = steamMultiplayerPeer.CreateServer(0);
             if (steamErr == Error.Ok)
             {
-                Multiplayer.MultiplayerPeer = steamMultiplayerPeer;                
+                Multiplayer.MultiplayerPeer = steamMultiplayerPeer;
                 GD.Print("Hosting via Steam P2P successful");
                 GodotSteamworks.Lobby.SetLobbyData(SteamLobbyId, "host_ready", "true");
                 AddPlayer(Multiplayer.GetUniqueId());
@@ -68,8 +81,6 @@ public partial class Game : Node
             {
                 // Use the MultiplayerPeer property for Godot compatibility
                 Multiplayer.MultiplayerPeer = steamMultiplayerPeer;
-                GD.Print("Joined via Steam P2P successful");
-                RpcId(1, MethodName.PlayerJoined, Multiplayer.GetUniqueId());
             }
         }
         catch (Exception ex)
@@ -78,8 +89,12 @@ public partial class Game : Node
         }
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-    private void PlayerJoined(int peerId)
+    /// <summary>
+    /// Called by the host when a new player joins the gameto sync them into the world
+    /// and other clients
+    /// </summary>
+    /// <param name="peerId"></param>
+    private void PlayerJoined(long peerId)
     {
         // Only the host needs to add players as they join since they will be added to the scene
         // by the host automatically via MultiplayerSpawner
@@ -87,32 +102,13 @@ public partial class Game : Node
             return;
         GD.Print($"Player Joined with Peer ID: {peerId}");
         AddPlayer(peerId);
-        SyncExistingPlayers();
     }
 
-    private void AddPlayer(int peerId)
+    private void AddPlayer(long peerId)
     {
         GD.Print("Adding player " + peerId + " to the game world");
         var player = PlayerScene.Instantiate<Player>();
         player.PeerId = peerId;
         World.AddChild(player, true);
-    }
-
-    [Rpc]
-    private void SyncExistingPlayers()
-    {
-        GD.Print("Syncing Existing Players in Game");
-        var players = GetTree().GetNodesInGroup("Player");
-        HashSet<int> existingPeerIds = new HashSet<int>();
-        foreach (Player player in players)
-        {
-            existingPeerIds.Add(player.PeerId);
-        }
-        foreach (var peerId in Multiplayer.GetPeers())
-        {
-            if (existingPeerIds.Contains(peerId))
-                continue;
-            AddPlayer(peerId);
-        }
     }
 }

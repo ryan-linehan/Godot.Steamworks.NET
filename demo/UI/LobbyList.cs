@@ -75,4 +75,49 @@ public partial class LobbyList : Panel
         }
     }
 
+    public void AppendLobbies(ulong[] lobbyIds)
+    {
+        foreach (var lobbyId in lobbyIds)
+        {
+            Button joinLobbyButton = new Button();
+            joinLobbyButton.Text = lobbyId.ToString();
+
+            async void OnJoinLobbyButtonPressed()
+            {
+                if (_isJoining)
+                {
+                    GD.Print("Already joining a lobby, please wait...");
+                    return;
+                }
+
+                _isJoining = true;
+                _loadingLabel.Visible = true;
+                _loadingLabel.Text = "Joining...";
+                var result = await GodotSteamworks.Lobby.JoinLobbyAsync(lobbyId);
+
+                if (result)
+                {
+                    Visible = false;
+                    EmitSignal(SignalName.SignalLobbyJoined, lobbyId);
+                }
+                else
+                {
+                    _loadingLabel.Text = "Failed to join lobby: " + lobbyId;
+                }
+                _isJoining = false;
+            }
+
+            void CleanupButton()
+            {
+                joinLobbyButton.Pressed -= OnJoinLobbyButtonPressed;
+                joinLobbyButton.TreeExiting -= CleanupButton;
+            }
+
+            joinLobbyButton.Pressed += OnJoinLobbyButtonPressed;
+            joinLobbyButton.TreeExiting += CleanupButton;
+
+            _lobbyListContainer.AddChild(joinLobbyButton);
+        }
+    }
+
 }

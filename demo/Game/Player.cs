@@ -7,15 +7,17 @@ public partial class Player : CharacterBody2D
     /// Exported so we can sync it over the network using godot's MultiplayerSyncronizer
     /// </summary>
     [Export]
-    public int PeerId { get; set; } = 1;
+    public long PeerId { get; set; } = 1;
+    [Export]
+    public Camera2D PlayerCamera { get; set; } = null!;
     Vector2 _direction = Vector2.Zero;
     public override void _Ready()
     {
         base._Ready();
         AddToGroup("Player");
-        if (PeerId == Multiplayer.GetUniqueId())
+        if (PeerId != Multiplayer.GetUniqueId())
         {
-            AddChild(new Camera2D());
+            PlayerCamera.QueueFree();
         }
     }
 
@@ -27,15 +29,12 @@ public partial class Player : CharacterBody2D
 
     public override void _UnhandledInput(InputEvent inputEvent)
     {
-        GD.Print("Unhandled Input in Player " + PeerId);
         if (Multiplayer.GetUniqueId() != PeerId)
-            return;
-        GD.Print("Processing Input for Local Player " + PeerId);
+            return;       
         _direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
         _direction = new Vector2(SnapToAxis(_direction.X), SnapToAxis(_direction.Y));
         if (Mathf.IsZeroApprox(_direction.X) && Mathf.IsZeroApprox(_direction.Y))
         {
-            // If the player is not moving, change to idle state
             Velocity = Vector2.Zero;
         }
     }
@@ -62,7 +61,6 @@ public partial class Player : CharacterBody2D
     {
         _direction = direction;
         Velocity = direction * 600;
-        GD.Print("Player " + PeerId + " moving in direction " + direction);
         MoveAndSlide();
         // Snap position to whole pixels to avoid subpixel movement
         GlobalPosition = new Vector2(Mathf.Round(GlobalPosition.X), Mathf.Round(GlobalPosition.Y));

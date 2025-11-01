@@ -12,44 +12,44 @@ namespace Godot.Steamworks.Net.Multiplayer;
 public partial class SteamworksLobby : Godot.RefCounted
 {
     /// <summary>
-    /// Signal emitted when a lobby is created.
+    /// Signal emitted when a lobby is created by the local client
     /// </summary>
     /// <param name="lobbyId">The ID of the created lobby</param>
     [Signal]
     public delegate void LobbyCreatedEventHandler(ulong lobbyId);
     /// <summary>
-    /// Signal emitted when a lobby is joined.
+    /// Signal emitted when local client joins a lobby
     /// </summary>
     /// <param name="lobbyId">The ID of the joined lobby</param>
     [Signal]
     public delegate void LobbyJoinedEventHandler(ulong lobbyId);
     /// <summary>
-    /// Signal emitted when joining a lobby fails.
+    /// Signal emitted when local client fails to join a lobby.
     /// </summary>
     /// <param name="lobbyId">The ID of the lobby that failed to join (0 if unknown)</param>
     /// <param name="errorMessage">The error message describing the failure</param>
     [Signal]
     public delegate void LobbyJoinFailedEventHandler(ulong lobbyId, string errorMessage);
     /// <summary>
-    /// Signal emitted when a lobby is left.
+    /// Signal emitted when the local client leaves the lobby.
     /// </summary>
     /// <param name="lobbyId">The ID of the lobby that was left</param>
     [Signal]
     public delegate void LobbyLeftEventHandler(ulong lobbyId);
-    /// <summary>
-    /// Signal emitted when a player joins the lobby.
-    /// </summary>
-    /// <param name="steamId"></param>
-    /// <param name="playerName"></param>
-    [Signal]
-    public delegate void PlayerLeftLobbyEventHandler(ulong steamId, string playerName);
     /// <summary>
     /// Signal emitted when a player leaves the lobby.
     /// </summary>
     /// <param name="steamId"></param>
     /// <param name="playerName"></param>
     [Signal]
-    public delegate void PlayerJoinedLobbyEventHandler(ulong steamId, string playerName);
+    public delegate void PlayerLeftLobbyEventHandler(ulong lobbyId, ulong steamId, string playerName);
+    /// <summary>
+    /// Signal emitted when a player joins the lobby
+    /// </summary>
+    /// <param name="steamId"></param>
+    /// <param name="playerName"></param>
+    [Signal]
+    public delegate void PlayerJoinedLobbyEventHandler(ulong lobbyId, ulong steamId, string playerName);
     /// <summary>
     /// Signal emitted when lobby search completes.
     /// </summary>
@@ -100,7 +100,9 @@ public partial class SteamworksLobby : Godot.RefCounted
 
     // TODO: Consider adding a type parameter for getting lobby data out of the key value pairs that would come back
     /// <summary>
-    /// Searches for lobbies matching the specified criteria
+    /// Searches for lobbies matching the specified criteria.
+    /// Note: Lobbies created with <see cref="ELobbyType.k_ELobbyTypeFriendsOnly"/> will not be visible from this call.
+    /// Use <see cref="GetFriendLobbies"/> to find friend lobbies for the current steam app id.
     /// </summary>
     /// <param name="maxResults">Maximum number of lobbies to return</param>
     /// <returns>List of lobby IDs found</returns>
@@ -137,6 +139,39 @@ public partial class SteamworksLobby : Godot.RefCounted
 
         return lobbies;
     }
+
+    /// <summary>
+    /// Gets the lobby ids for all steam friends created for the current game's steam app id
+    /// </summary>
+    /// <returns></returns>
+    public ulong[] GetFriendLobbies()
+    {
+        var godotSteam = GodotSteamworks.Instance;
+        if (godotSteam == null || !godotSteam.IsInitalized)
+        {
+            GodotSteamworksLogger.LogError("Steam is not initialized!");
+            return Array.Empty<ulong>();
+        }
+
+        GodotSteamworksLogger.LogInfo("Searching for friend lobbies");
+        var lobbies = new List<ulong>();
+        var friends = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
+        GodotSteamworksLogger.LogInfo($"Found {friends} friends to check for lobbies");
+        for (int i = 0; i < friends; i++)
+        {
+            FriendGameInfo_t friendGameInfo;
+            CSteamID steamIDFriend = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
+            if (SteamFriends.GetFriendGamePlayed(steamIDFriend, out friendGameInfo) && friendGameInfo.m_gameID.AppID() == SteamUtils.GetAppID() && friendGameInfo.m_steamIDLobby.IsValid())
+            {
+                lobbies.Add(friendGameInfo.m_steamIDLobby.m_SteamID);
+            }
+        }
+
+        GodotSteamworksLogger.LogInfo($"Found {lobbies.Count} friend lobbies");
+
+        return lobbies.ToArray();
+    }
+
 
     /// <summary>
     /// Searches for lobbies (traditional callback pattern - processes results in OnLobbyList)
@@ -439,12 +474,12 @@ public partial class SteamworksLobby : Godot.RefCounted
         if ((result.m_rgfChatMemberStateChange & (uint)EChatMemberStateChange.k_EChatMemberStateChangeEntered) != 0)
         {
             GodotSteamworksLogger.LogInfo($"Player joined lobby: {playerName}");
-            EmitSignal(SignalName.PlayerJoinedLobby, result.m_ulSteamIDUserChanged, playerName);
+            EmitSignal(SignalName.PlayerJoinedLobby, result.m_ulSteamIDLobby, result.m_ulSteamIDUserChanged, playerName);
         }
         else if ((result.m_rgfChatMemberStateChange & (uint)EChatMemberStateChange.k_EChatMemberStateChangeLeft) != 0)
         {
             GodotSteamworksLogger.LogInfo($"Player left lobby: {playerName}");
-            EmitSignal(SignalName.PlayerLeftLobby, result.m_ulSteamIDUserChanged, playerName);
+            EmitSignal(SignalName.PlayerLeftLobby, result.m_ulSteamIDLobby, result.m_ulSteamIDUserChanged, playerName);
         }
     }
 

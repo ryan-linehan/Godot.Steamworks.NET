@@ -68,6 +68,8 @@ public partial class SteamLobbyMenu : Control
 
         // Subscribe to lobby joined event to update UI accordingly
         GodotSteamworks.Lobby.LobbyJoined += OnLobbyJoined;
+        GodotSteamworks.Lobby.PlayerJoinedLobby += OnRemotePlayerLobbyStatusChanged;
+        GodotSteamworks.Lobby.PlayerLeftLobby += OnRemotePlayerLobbyStatusChanged;
         GodotSteamworks.Lobby.LobbyDataUpdatedDetailed += (lobbyData) =>
         {
             // Update the members list when lobby data is updated
@@ -108,6 +110,7 @@ public partial class SteamLobbyMenu : Control
         LobbyListMenu.Visible = true;
         var lobbies = await GodotSteamworks.Lobby.SearchLobbiesAsync();
         LobbyListMenu.PopulateLobbyList(lobbies);
+        LobbyListMenu.AppendLobbies(GodotSteamworks.Lobby.GetFriendLobbies());
         LobbyListMenu.SetIsLoading(false);
     }
 
@@ -120,6 +123,10 @@ public partial class SteamLobbyMenu : Control
         }
     }
 
+    /// <summary>
+    /// Handler for when the local user has joined a lobby
+    /// </summary>
+    /// <param name="lobbyId"></param>
     private void OnLobbyJoined(ulong lobbyId)
     {
         _lobbyId = lobbyId;
@@ -134,5 +141,16 @@ public partial class SteamLobbyMenu : Control
         LobbyListMenu.Visible = false;
         LobbyMembersListMenu.Visible = true;
         LobbyMembersListMenu.UpdateMembersList(lobbyId);
+    }
+    
+    /// <summary>
+    /// Handler for when a remote player joins the lobby
+    /// </summary>
+    /// <param name="lobbyId"></param>
+    /// <param name="_"></param>
+    /// <param name="__"></param>
+    private void OnRemotePlayerLobbyStatusChanged(ulong lobbyId, ulong _, string __)
+    {
+        LobbyMembersListMenu.UpdateMembersList(_lobbyId);
     }
 }

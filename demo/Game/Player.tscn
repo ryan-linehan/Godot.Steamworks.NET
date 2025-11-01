@@ -14,8 +14,9 @@ properties/1/path = NodePath(".:PeerId")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("PlayerCamera")]
 script = ExtResource("1_yg8f4")
+PlayerCamera = NodePath("Camera2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_hiq6t")
@@ -26,3 +27,8 @@ shape = SubResource("RectangleShape2D_v0l8u")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_hiq6t")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+drag_horizontal_enabled = true
+drag_vertical_enabled = true

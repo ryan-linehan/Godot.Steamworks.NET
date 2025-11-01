@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dag7erv1whfoi"]
+[gd_scene load_steps=5 format=3 uid="uid://dag7erv1whfoi"]
 
 [ext_resource type="Script" uid="uid://bjw4yur54plej" path="res://Game/Game.cs" id="1_hqwdr"]
 [ext_resource type="PackedScene" uid="uid://dpsy8glhieadt" path="res://Game/Player.tscn" id="2_iv3md"]
+[ext_resource type="Texture2D" uid="uid://ch0aljsxfwrd6" path="res://icon.svg" id="3_37esa"]
 [ext_resource type="Script" uid="uid://dbnt62d0j2834" path="res://Game/PeerStatusLabel.cs" id="3_iv3md"]
 
 [node name="Game" type="Node" node_paths=PackedStringArray("World")]
@@ -10,6 +11,17 @@ World = NodePath("World")
 PlayerScene = ExtResource("2_iv3md")
 
 [node name="World" type="Node2D" parent="."]
+
+[node name="StaticObj" type="Sprite2D" parent="World"]
+position = Vector2(-159, 5)
+texture = ExtResource("3_37esa")
+
+[node name="Label" type="Label" parent="World/StaticObj"]
+offset_left = -30.0
+offset_top = -85.0
+offset_right = 41.0
+offset_bottom = -62.0
+text = "static obj"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://dpsy8glhieadt")
