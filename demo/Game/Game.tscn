@@ -1,16 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://dag7erv1whfoi"]
+[gd_scene load_steps=4 format=3 uid="uid://dag7erv1whfoi"]
 
 [ext_resource type="Script" uid="uid://bjw4yur54plej" path="res://Game/Game.cs" id="1_hqwdr"]
+[ext_resource type="PackedScene" uid="uid://dpsy8glhieadt" path="res://Game/Player.tscn" id="2_iv3md"]
 [ext_resource type="Script" uid="uid://dbnt62d0j2834" path="res://Game/PeerStatusLabel.cs" id="3_iv3md"]
 
 [node name="Game" type="Node" node_paths=PackedStringArray("World")]
 script = ExtResource("1_hqwdr")
 World = NodePath("World")
+PlayerScene = ExtResource("2_iv3md")
 
 [node name="World" type="Node2D" parent="."]
-visible = false
 
-[node name="HUD" type="MarginContainer" parent="."]
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://dpsy8glhieadt")
+spawn_path = NodePath("../World")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="MarginContainer" parent="CanvasLayer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -22,19 +29,19 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="Control" type="Control" parent="HUD"]
+[node name="Control" type="Control" parent="CanvasLayer/HUD"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HUD/Control"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/HUD/Control"]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="StaticPeerStatusLabel" type="Label" parent="HUD/Control/HBoxContainer"]
+[node name="StaticPeerStatusLabel" type="Label" parent="CanvasLayer/HUD/Control/HBoxContainer"]
 layout_mode = 2
 text = "Peer Status:"
 
-[node name="PeerStatusLabel" type="Label" parent="HUD/Control/HBoxContainer"]
+[node name="PeerStatusLabel" type="Label" parent="CanvasLayer/HUD/Control/HBoxContainer"]
 layout_mode = 2
 script = ExtResource("3_iv3md")

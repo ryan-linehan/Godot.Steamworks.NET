@@ -6,10 +6,12 @@
 
 [node name="Main" type="Node" node_paths=PackedStringArray("SteamLobbyMenu", "Game")]
 script = ExtResource("1_r0du0")
-SteamLobbyMenu = NodePath("SteamLobbyMenu")
+SteamLobbyMenu = NodePath("CanvasLayer/SteamLobbyMenu")
 Game = NodePath("Game")
 
-[node name="SteamLobbyMenu" parent="." instance=ExtResource("1_glv2v")]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="SteamLobbyMenu" parent="CanvasLayer" instance=ExtResource("1_glv2v")]
 mouse_filter = 2
 
 [node name="Game" parent="." instance=ExtResource("2_uu6xs")]
