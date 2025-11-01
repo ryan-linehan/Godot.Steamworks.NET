@@ -3,11 +3,23 @@ using System;
 
 public partial class Player : CharacterBody2D
 {
+    private long _peerId;
     /// <summary>
     /// Exported so we can sync it over the network using godot's MultiplayerSyncronizer
     /// </summary>
     [Export]
-    public long PeerId { get; set; } = 1;
+    public long PeerId
+    {
+        get
+        {
+            return _peerId;
+        }
+        set
+        {
+            _peerId = value;
+            SetMultiplayerAuthority((int)value);
+        }
+    }
     [Export]
     public PackedScene PlayerCamera { get; set; } = null!;
     Vector2 _direction = Vector2.Zero;
@@ -25,13 +37,14 @@ public partial class Player : CharacterBody2D
     public override void _Process(double delta)
     {
         base._Process(delta);
+        GD.Print($"Player {PeerId} position: {GlobalPosition}");
         ProcessMovement(_direction);
     }
 
     public override void _UnhandledInput(InputEvent inputEvent)
     {
         if (Multiplayer.GetUniqueId() != PeerId)
-            return;       
+            return;
         _direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
         _direction = new Vector2(SnapToAxis(_direction.X), SnapToAxis(_direction.Y));
         if (Mathf.IsZeroApprox(_direction.X) && Mathf.IsZeroApprox(_direction.Y))
