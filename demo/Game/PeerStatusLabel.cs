@@ -7,6 +7,8 @@ public partial class PeerStatusLabel : Label
     public override void _Process(double delta)
     {
         base._Process(delta);
+        if(Multiplayer.MultiplayerPeer == null)
+            return;
         var newStatus = Multiplayer.MultiplayerPeer.GetConnectionStatus();
         if (newStatus != status)
         {

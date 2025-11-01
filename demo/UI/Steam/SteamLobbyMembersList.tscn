@@ -1,16 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://4tbtr8sv7lsp"]
+[gd_scene load_steps=2 format=3 uid="uid://blx5clon42ox6"]
 
-[ext_resource type="Script" uid="uid://cxwckuxq24hqd" path="res://UI/LobbyList.cs" id="1_cld16"]
+[ext_resource type="Script" uid="uid://nogksg1f2hj7" path="res://UI/Steam/SteamLobbyMembersList.cs" id="1_t5t5f"]
 
-[node name="LobbyList" type="Panel" node_paths=PackedStringArray("_lobbyListContainer", "_loadingLabel")]
+[node name="LobbyMembersList" type="Panel" node_paths=PackedStringArray("_membersListContainer")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_cld16")
-_lobbyListContainer = NodePath("MarginContainer/VBoxContainer/ScrollContainer/GameIdsList")
-_loadingLabel = NodePath("MarginContainer/VBoxContainer/LoadingLabel")
+script = ExtResource("1_t5t5f")
+_membersListContainer = NodePath("MarginContainer/VBoxContainer/ScrollContainer/MembersVBox")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -27,14 +26,10 @@ theme_override_constants/margin_bottom = 16
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="LoadingLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "Loading"
-
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="GameIdsList" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="MembersVBox" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3

@@ -43,12 +43,12 @@ public partial class SteamLobbyMenu : Control
     /// Control to show the lobbies available for steam user to join
     /// </summary>
     [Export]
-    public LobbyList LobbyListMenu = null!;
+    public SteamLobbyList LobbyListMenu = null!;
     /// <summary>
     /// Control to show the members of the current lobby the steam user is in
     /// </summary>
     [Export]
-    public LobbyMembersList LobbyMembersListMenu = null!;
+    public SteamLobbyMembersList LobbyMembersListMenu = null!;
     /// <summary>
     /// Label that shows the current lobby id
     /// </summary>

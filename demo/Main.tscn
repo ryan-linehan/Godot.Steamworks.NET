@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://np4lwfg2b7vl"]
 
-[ext_resource type="PackedScene" uid="uid://del0dvsm2accj" path="res://UI/SteamLobbyMenu.tscn" id="1_glv2v"]
+[ext_resource type="PackedScene" uid="uid://del0dvsm2accj" path="res://UI/Steam/SteamLobbyMenu.tscn" id="1_glv2v"]
 [ext_resource type="Script" uid="uid://bsqk5alpxlwrs" path="res://Main.cs" id="1_r0du0"]
 [ext_resource type="PackedScene" uid="uid://dag7erv1whfoi" path="res://Game/Game.tscn" id="2_uu6xs"]
 

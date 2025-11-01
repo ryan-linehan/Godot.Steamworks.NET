@@ -2,7 +2,7 @@ using Godot;
 using Godot.Steamworks.Net;
 using System;
 
-public partial class LobbyMembersList : Panel
+public partial class SteamLobbyMembersList : Panel
 {
     [Export]
     VBoxContainer _membersListContainer = null!;

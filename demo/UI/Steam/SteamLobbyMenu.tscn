@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://del0dvsm2accj"]
 
-[ext_resource type="Script" uid="uid://b275c8mtu8f8r" path="res://UI/SteamLobbyMenu.cs" id="1_0stve"]
-[ext_resource type="PackedScene" uid="uid://4tbtr8sv7lsp" path="res://UI/LobbyList.tscn" id="2_ugirv"]
-[ext_resource type="PackedScene" uid="uid://blx5clon42ox6" path="res://UI/LobbyMembersList.tscn" id="3_kv2r6"]
+[ext_resource type="Script" uid="uid://b275c8mtu8f8r" path="res://UI/Steam/SteamLobbyMenu.cs" id="1_0stve"]
+[ext_resource type="PackedScene" uid="uid://4tbtr8sv7lsp" path="res://UI/Steam/SteamLobbyList.tscn" id="2_ugirv"]
+[ext_resource type="PackedScene" uid="uid://blx5clon42ox6" path="res://UI/Steam/SteamLobbyMembersList.tscn" id="3_kv2r6"]
 
 [node name="SteamLobbyMenu" type="Control" node_paths=PackedStringArray("CreateLobbyButton", "JoinLobbyButton", "BackButton", "StartGameButton", "LobbyListMenu", "LobbyMembersListMenu", "LobbyIdLabel")]
 layout_mode = 3

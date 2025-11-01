@@ -2,7 +2,7 @@ using Godot;
 using Godot.Steamworks.Net;
 using System;
 
-public partial class LobbyList : Panel
+public partial class SteamLobbyList : Panel
 {
     /// <summary>
     /// Emitted when a user joins a lobby from the LobbyList
