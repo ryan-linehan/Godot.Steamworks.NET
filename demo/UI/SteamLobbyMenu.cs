@@ -8,7 +8,7 @@ using Steamworks;
 public partial class SteamLobbyMenu : Control
 {
     /// <summary>
-    /// Signals that the game should start for the given lobby idx
+    /// Signals that the game should start for the given lobby id
     /// </summary>
     /// <param name="lobbyId"></param>
     [Signal]

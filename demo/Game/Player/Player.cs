@@ -9,15 +9,16 @@ public partial class Player : CharacterBody2D
     [Export]
     public long PeerId { get; set; } = 1;
     [Export]
-    public Camera2D PlayerCamera { get; set; } = null!;
+    public PackedScene PlayerCamera { get; set; } = null!;
     Vector2 _direction = Vector2.Zero;
     public override void _Ready()
     {
         base._Ready();
         AddToGroup("Player");
-        if (PeerId != Multiplayer.GetUniqueId())
+        if (PeerId == Multiplayer.GetUniqueId())
         {
-            PlayerCamera.QueueFree();
+            var camera = PlayerCamera.Instantiate<Camera2D>();
+            AddChild(camera, true);
         }
     }
 

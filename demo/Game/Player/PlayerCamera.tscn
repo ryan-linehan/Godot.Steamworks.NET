@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://btdrr57rwxali"]
+
+[node name="PlayerCamera" type="Camera2D"]
+position_smoothing_enabled = true
+drag_horizontal_enabled = true
+drag_vertical_enabled = true

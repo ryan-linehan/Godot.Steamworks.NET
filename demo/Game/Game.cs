@@ -1,92 +1,56 @@
 using Godot;
-using Godot.Steamworks.Net;
-using System;
-using System.Collections.Generic;
+
 public partial class Game : Node
 {
     [Export]
     public Node2D World { get; set; } = null!;
     [Export]
     public PackedScene PlayerScene { get; set; } = null!;
-    public ulong SteamLobbyId { get; set; }
     public override void _Ready()
     {
         base._Ready();
         World.Visible = false;
         Multiplayer.PeerConnected += OnPeerConnected;
+        Multiplayer.PeerDisconnected += OnPeerDisconnected;
     }
 
     private void OnPeerConnected(long id)
     {
         GD.Print($"Peer Connected: {id}" + "Self id: " + Multiplayer.GetUniqueId());
         GD.Print("Joined via Steam P2P successful");
-        if(Multiplayer.IsServer())
-        {
-            PlayerJoined(id);
-        }
+        if (!Multiplayer.IsServer())
+            return;
+        PlayerJoined(id);
     }
 
+    private void OnPeerDisconnected(long id)
+    {
+        GD.Print($"Peer Disconnected: {id}");
+        // Handle player disconnection logic here
+        if (!Multiplayer.IsServer())
+            return;
+        PlayerLeft(id);
+    }
+
+    private void PlayerLeft(long peerId)
+    {
+        GD.Print($"Player Left with Peer ID: {peerId}");
+        // Remove the player from the world
+        foreach (var player in World.GetChildren())
+        {
+            if (player is Player p && p.PeerId == peerId)
+            {
+                p.QueueFree();
+                break;
+            }
+        }
+    }
 
     public void StartGame()
     {
         GD.Print("Game Started!");
-        GD.Print($"Starting Networking P2P via Steam for Lobby ID: {SteamLobbyId}");
-        if (GodotSteamworks.Instance.IsInitalized && GodotSteamworks.Lobby.IsLobbyOwner(SteamLobbyId))
-        {
-            StartHosting();
-            World.Visible = true;
-        }
-        else
-        {
-            GD.PrintErr("GodotSteamworks is not initialized! Multiplayer only supported when Steam is running and initialized for the demo");
-        }
-    }
-
-    private void StartHosting()
-    {
-        GD.Print("Hosting Game Session");
-        try
-        {
-            var steamMultiplayerPeer = new SteamMultiplayerPeer();
-            var steamErr = steamMultiplayerPeer.CreateServer(0);
-            if (steamErr == Error.Ok)
-            {
-                Multiplayer.MultiplayerPeer = steamMultiplayerPeer;
-                GD.Print("Hosting via Steam P2P successful");
-                GodotSteamworks.Lobby.SetLobbyData(SteamLobbyId, "host_ready", "true");
-                AddPlayer(Multiplayer.GetUniqueId());
-            }
-        }
-        catch (Exception ex)
-        {
-            GD.PrintErr($"Failed to start hosting: {ex.Message}");
-        }
-    }
-
-    public void JoinGame()
-    {
-        GD.Print("Joining Game Session");
-        if (!GodotSteamworks.Instance.IsInitalized)
-        {
-            GD.PrintErr("GodotSteamworks is not initialized! Multiplayer only supported when Steam is running and initialized for the demo");
-            return;
-        }
-
+        AddPlayerToGameWorld(Multiplayer.GetUniqueId());
         World.Visible = true;
-        try
-        {
-            var steamMultiplayerPeer = new SteamMultiplayerPeer();
-            var steamErr = steamMultiplayerPeer.CreateClient(GodotSteamworks.Lobby.GetLobbyOwner(SteamLobbyId), 0);
-            if (steamErr == Error.Ok)
-            {
-                // Use the MultiplayerPeer property for Godot compatibility
-                Multiplayer.MultiplayerPeer = steamMultiplayerPeer;
-            }
-        }
-        catch (Exception ex)
-        {
-            GD.PrintErr($"Failed to join game: {ex.Message}");
-        }
     }
 
     /// <summary>
@@ -101,10 +65,14 @@ public partial class Game : Node
         if (!Multiplayer.IsServer())
             return;
         GD.Print($"Player Joined with Peer ID: {peerId}");
-        AddPlayer(peerId);
+        AddPlayerToGameWorld(peerId);
     }
 
-    private void AddPlayer(long peerId)
+    /// <summary>
+    /// Adds a player to the game world
+    /// </summary>
+    /// <param name="peerId"></param>
+    private void AddPlayerToGameWorld(long peerId)
     {
         GD.Print("Adding player " + peerId + " to the game world");
         var player = PlayerScene.Instantiate<Player>();

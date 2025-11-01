@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dpsy8glhieadt"]
+[gd_scene load_steps=6 format=3 uid="uid://dpsy8glhieadt"]
 
-[ext_resource type="Script" uid="uid://bdln18ef1dva2" path="res://Game/Player.cs" id="1_yg8f4"]
+[ext_resource type="Script" uid="uid://bdln18ef1dva2" path="res://Game/Player/Player.cs" id="1_yg8f4"]
+[ext_resource type="PackedScene" uid="uid://btdrr57rwxali" path="res://Game/Player/PlayerCamera.tscn" id="2_fd82q"]
 [ext_resource type="Texture2D" uid="uid://ch0aljsxfwrd6" path="res://icon.svg" id="2_hiq6t"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v0l8u"]
@@ -14,9 +15,9 @@ properties/1/path = NodePath(".:PeerId")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("PlayerCamera")]
+[node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_yg8f4")
-PlayerCamera = NodePath("Camera2D")
+PlayerCamera = ExtResource("2_fd82q")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_hiq6t")
@@ -27,8 +28,3 @@ shape = SubResource("RectangleShape2D_v0l8u")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_hiq6t")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position_smoothing_enabled = true
-drag_horizontal_enabled = true
-drag_vertical_enabled = true
