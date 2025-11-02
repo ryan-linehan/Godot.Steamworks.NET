@@ -99,8 +99,7 @@ public partial class GodotConnectMenu : Control
 
     private void OnJoinGameButtonPressed()
     {
-        ConnectToGameServer();
-        EmitSignal(SignalName.SignalGameJoined);
+        ConnectToGameServer();        
     }
 
     /// <summary>
@@ -133,6 +132,7 @@ public partial class GodotConnectMenu : Control
             {
                 // Use the MultiplayerPeer property for Godot compatibility
                 Multiplayer.MultiplayerPeer = multiplayerPeer;
+                EmitSignal(SignalName.SignalGameJoined);
             }
         }
         catch (Exception ex)

@@ -15,18 +15,18 @@ public partial class Main : Node
     public override void _Ready()
     {
         _networkMenu = NetworkingCanvas;
-        _networkMenu.SignalGameHostReady += OnHostGame;
-        _networkMenu.SignalGameJoined += OnJoinGame;
+        _networkMenu.SignalGameHostReady += OnHostReady;
+        _networkMenu.SignalGameJoined += OnGameJoined;
     }
 
-    private void OnJoinGame()
+    private void OnGameJoined()
     {
         _networkMenu.Visible = false;
         Game.StartGame();
     }
 
 
-    private void OnHostGame()
+    private void OnHostReady()
     {
         _networkMenu.Visible = false;
         Game.StartGame();

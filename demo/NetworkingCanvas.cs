@@ -92,7 +92,6 @@ public partial class NetworkingCanvas : CanvasLayer
             GodotSteamworks.Instance.InitGodotSteamworks();
         }
 
-
         if (GodotSteamworks.Instance.IsInitialized)
         {
             var index = MenuOptionButton.GetItemIndex((int)NetworkingCanvasTypes.SteamworksNET);

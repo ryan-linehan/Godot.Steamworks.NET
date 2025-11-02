@@ -80,7 +80,7 @@ public partial class SteamLobbyMenu : Control
                  && !GodotSteamworks.Lobby.IsLobbyOwner(_lobbyId))
             {
                 // Signal to start peer connection as client
-                EmitSignal(SignalName.SignalGameJoined);
+                ConnectToGameServer();
             }
         };
     }
@@ -201,6 +201,7 @@ public partial class SteamLobbyMenu : Control
             {
                 // Use the MultiplayerPeer property for Godot compatibility
                 Multiplayer.MultiplayerPeer = steamMultiplayerPeer;
+                EmitSignal(SignalName.SignalGameJoined);
             }
         }
         catch (Exception ex)

@@ -13,6 +13,7 @@ Game = NodePath("Game")
 
 [node name="NetworkingCanvas" type="CanvasLayer" parent="." node_paths=PackedStringArray("SteamLobbyMenu", "GodotMenu", "SinglePlayerMenu", "MenuOptionButton", "RefreshButton")]
 script = ExtResource("2_fos0i")
+StartingNetworkingType = 100
 SteamLobbyMenu = NodePath("SteamLobbyMenu")
 GodotMenu = NodePath("GodotConnectMenu")
 SinglePlayerMenu = NodePath("SinglePlayerMenu")
