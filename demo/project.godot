@@ -23,6 +23,10 @@ GodotSteamworks="*res://addons/Godot.Steamworks.NET/GodotSteamworks.cs"
 
 project/assembly_name="demo"
 
+[editor]
+
+naming/scene_name_casing=1
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/Godot.Steamworks.NET/plugin.cfg")

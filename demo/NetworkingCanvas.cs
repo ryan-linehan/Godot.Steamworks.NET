@@ -18,14 +18,16 @@ public partial class NetworkingCanvas : CanvasLayer
     [Export]
     public GodotConnectMenu GodotMenu = null!;
     [Export]
-    public Control SinglePlayerMenu = null!;
+    public SinglePlayerMenu SinglePlayerMenu = null!;
     [Export]
     public OptionButton MenuOptionButton = null!;
     [Export]
     public Button RefreshButton = null!;
 
-    public override void _Ready()
+    public override async void _Ready()
     {
+        await OnlineConnectionChecker.RefreshOnlineStatus();
+        SinglePlayerMenu.SignalGameHostReady += EmitHostGame;
         SteamLobbyMenu.SignalGameHostReady += EmitHostGame;
         SteamLobbyMenu.SignalGameJoined += EmitJoinGame;
         GodotMenu.SignalGameHostReady += EmitHostGame;
@@ -45,7 +47,7 @@ public partial class NetworkingCanvas : CanvasLayer
             }
         }
 
-        MenuOptionButton.Selected = (int)StartingNetworkingType;
+        MenuOptionButton.Selected = MenuOptionButton.GetItemIndex((int)StartingNetworkingType);
         OnMenuOptionSelected(MenuOptionButton.Selected);
     }
 
@@ -84,27 +86,37 @@ public partial class NetworkingCanvas : CanvasLayer
         EmitSignal(nameof(SignalGameJoined));
     }
 
-    private void AutoDetectNetworking()
+    private async void AutoDetectNetworking()
     {
+        await OnlineConnectionChecker.RefreshOnlineStatus();        
         // Retry initializing GodotSteamworks if not already initialized
         if (!GodotSteamworks.Instance.IsInitialized)
         {
             GodotSteamworks.Instance.InitGodotSteamworks();
         }
 
-        if (GodotSteamworks.Instance.IsInitialized)
+        if (GodotSteamworks.Instance.IsInitialized && OnlineConnectionChecker.IsOnline)
         {
             var index = MenuOptionButton.GetItemIndex((int)NetworkingCanvasTypes.SteamworksNET);
             if (index == -1)
             {
                 MenuOptionButton.AddItem(NetworkingCanvasTypes.SteamworksNET.ToString(), (int)NetworkingCanvasTypes.SteamworksNET);
             }
-            MenuOptionButton.Selected = (int)NetworkingCanvasTypes.SteamworksNET;
+            SinglePlayerMenu.Visible = false;
+            SteamLobbyMenu.Visible = true;
+            GodotMenu.Visible = false;
         }
-        else
+        else if (!OnlineConnectionChecker.IsOnline)
+        {
+            SinglePlayerMenu.Visible = true;
+            SteamLobbyMenu.Visible = false;
+            GodotMenu.Visible = false;
+        }
+        else if(OnlineConnectionChecker.IsOnline)
         {
             SteamLobbyMenu.Visible = false;
             GodotMenu.Visible = true;
+            SinglePlayerMenu.Visible = false;
         }
     }
 }

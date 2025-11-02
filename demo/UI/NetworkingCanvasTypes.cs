@@ -1,7 +1,7 @@
 public enum NetworkingCanvasTypes
 {
-    None = -1, // Singleplayer
-    GodotENet = 0,
-    SteamworksNET = 1,
+    None = 0, // Singleplayer
+    GodotENet = 1,
+    SteamworksNET = 2,
     AutoDetect = 100
 }

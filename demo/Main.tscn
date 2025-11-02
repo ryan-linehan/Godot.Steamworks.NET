@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://np4lwfg2b7vl"]
+[gd_scene load_steps=7 format=3 uid="uid://np4lwfg2b7vl"]
 
 [ext_resource type="PackedScene" uid="uid://del0dvsm2accj" path="res://UI/Steam/SteamLobbyMenu.tscn" id="1_glv2v"]
 [ext_resource type="Script" uid="uid://bsqk5alpxlwrs" path="res://Main.cs" id="1_r0du0"]
 [ext_resource type="Script" uid="uid://bjwredqbiaxpw" path="res://NetworkingCanvas.cs" id="2_fos0i"]
 [ext_resource type="PackedScene" uid="uid://dag7erv1whfoi" path="res://Game/Game.tscn" id="2_uu6xs"]
 [ext_resource type="PackedScene" uid="uid://dpcpny8vdk7y7" path="res://UI/Godot/GodotConnectMenu.tscn" id="3_cm0pq"]
+[ext_resource type="PackedScene" uid="uid://buf080ay7gwws" path="res://UI/SinglePlayer/SinglePlayerMenu.tscn" id="5_3dxm6"]
 
 [node name="Main" type="Node" node_paths=PackedStringArray("NetworkingCanvas", "Game")]
 script = ExtResource("1_r0du0")
@@ -25,13 +26,9 @@ visible = false
 mouse_filter = 2
 
 [node name="GodotConnectMenu" parent="NetworkingCanvas" instance=ExtResource("3_cm0pq")]
-
-[node name="SinglePlayerMenu" type="Control" parent="NetworkingCanvas"]
 visible = false
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+
+[node name="SinglePlayerMenu" parent="NetworkingCanvas" instance=ExtResource("5_3dxm6")]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="NetworkingCanvas"]
 offset_left = 16.0

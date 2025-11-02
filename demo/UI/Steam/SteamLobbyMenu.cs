@@ -9,7 +9,7 @@ using System;
 public partial class SteamLobbyMenu : Control
 {
     /// <summary>
-    /// Signals that the game should start for the given lobby id
+    /// Signals that the game should start
     /// </summary>
     /// <param name="lobbyId"></param>
     [Signal]
