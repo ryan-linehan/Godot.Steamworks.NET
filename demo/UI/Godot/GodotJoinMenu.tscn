@@ -1,0 +1,68 @@
+[gd_scene load_steps=2 format=3 uid="uid://vwc867ewi1n2"]
+
+[ext_resource type="Script" uid="uid://cyhtb654q4cwl" path="res://UI/Godot/GodotJoinMenu.cs" id="1_cst3q"]
+
+[node name="GodotJoinMenu" type="PanelContainer" node_paths=PackedStringArray("BackButton", "IpAddress", "Port", "JoinGameButton")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -165.0
+offset_top = -101.0
+offset_right = 165.0
+offset_bottom = 101.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cst3q")
+BackButton = NodePath("MarginContainer/VBoxContainer2/BackButton")
+IpAddress = NodePath("MarginContainer/VBoxContainer2/GridContainer/IpAddressTextEdit")
+Port = NodePath("MarginContainer/VBoxContainer2/GridContainer/PortTextEdit")
+JoinGameButton = NodePath("MarginContainer/VBoxContainer2/JoinButton")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer2"]
+layout_mode = 2
+columns = 2
+
+[node name="IpAddressLabel" type="Label" parent="MarginContainer/VBoxContainer2/GridContainer"]
+layout_mode = 2
+text = "Enter an ip address:"
+horizontal_alignment = 2
+
+[node name="IpAddressTextEdit" type="LineEdit" parent="MarginContainer/VBoxContainer2/GridContainer"]
+custom_minimum_size = Vector2(140, 30)
+layout_mode = 2
+placeholder_text = "127.0.0.1"
+
+[node name="PortLabel" type="Label" parent="MarginContainer/VBoxContainer2/GridContainer"]
+layout_mode = 2
+text = "Port:"
+horizontal_alignment = 2
+
+[node name="PortTextEdit" type="LineEdit" parent="MarginContainer/VBoxContainer2/GridContainer"]
+custom_minimum_size = Vector2(140, 30)
+layout_mode = 2
+placeholder_text = "8910"
+
+[node name="JoinButton" type="Button" parent="MarginContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Join"
+
+[node name="GapControl" type="Control" parent="MarginContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Back"

@@ -2,7 +2,8 @@ demo/nuget/
 exports/
 
 # Godot 4+ specific ignores
-godot/
+# Note: Using leading slash to only match godot/ at root
+/godot/
 **/.godot/
 # Godot-specific ignores
 import/

@@ -1,0 +1,57 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7nmyhpkb52qh"]
+
+[ext_resource type="Script" uid="uid://c5nw5jkkwqpub" path="res://UI/Godot/GodotHostMenu.cs" id="1_ts3a2"]
+
+[node name="GodotHostMenu" type="PanelContainer" node_paths=PackedStringArray("BackButton", "Port", "HostGameButton")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -56.0
+offset_top = -31.5
+offset_right = 56.0
+offset_bottom = 31.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ts3a2")
+BackButton = NodePath("MarginContainer/VBoxContainer2/BackButton")
+Port = NodePath("MarginContainer/VBoxContainer2/VBoxContainer/HostPortTextEdit")
+HostGameButton = NodePath("MarginContainer/VBoxContainer2/HostButton")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="GridContainer" parent="MarginContainer/VBoxContainer2"]
+layout_mode = 2
+columns = 2
+
+[node name="HostPortLabel" type="Label" parent="MarginContainer/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+text = "Port:"
+horizontal_alignment = 2
+
+[node name="HostPortTextEdit" type="LineEdit" parent="MarginContainer/VBoxContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(140, 30)
+layout_mode = 2
+placeholder_text = "8910"
+
+[node name="HostButton" type="Button" parent="MarginContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Host"
+
+[node name="GapControl" type="Control" parent="MarginContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Back"
