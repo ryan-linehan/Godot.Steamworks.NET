@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://np4lwfg2b7vl"]
+[gd_scene load_steps=5 format=3 uid="uid://np4lwfg2b7vl"]
 
 [ext_resource type="PackedScene" uid="uid://del0dvsm2accj" path="res://UI/Steam/SteamLobbyMenu.tscn" id="1_glv2v"]
 [ext_resource type="Script" uid="uid://bsqk5alpxlwrs" path="res://Main.cs" id="1_r0du0"]
 [ext_resource type="PackedScene" uid="uid://dag7erv1whfoi" path="res://Game/Game.tscn" id="2_uu6xs"]
+[ext_resource type="PackedScene" uid="uid://dpcpny8vdk7y7" path="res://UI/Godot/GodotConnectMenu.tscn" id="3_cm0pq"]
 
 [node name="Main" type="Node" node_paths=PackedStringArray("SteamLobbyMenu", "Game")]
 script = ExtResource("1_r0du0")
@@ -13,5 +14,8 @@ Game = NodePath("Game")
 
 [node name="SteamLobbyMenu" parent="CanvasLayer" instance=ExtResource("1_glv2v")]
 mouse_filter = 2
+
+[node name="GodotConnectMenu" parent="CanvasLayer" instance=ExtResource("3_cm0pq")]
+visible = false
 
 [node name="Game" parent="." instance=ExtResource("2_uu6xs")]

@@ -1,6 +1,7 @@
 using Godot.Steamworks.Net;
 using Godot;
 using Steamworks;
+using System;
 
 /// <summary>
 /// Example menu script to create or join a Steam lobby and start p2p connection over steam
@@ -12,13 +13,13 @@ public partial class SteamLobbyMenu : Control
     /// </summary>
     /// <param name="lobbyId"></param>
     [Signal]
-    public delegate void SignalStartGameEventHandler(ulong lobbyId);
+    public delegate void SignalGameHostReadyEventHandler();
     /// <summary>
     /// Signals that the game should start and join the given lobby id
     /// </summary>
     /// <param name="lobbyId"></param>
     [Signal]
-    public delegate void SignalJoinGameEventHandler(ulong lobbyId);
+    public delegate void SignalGameJoinedEventHandler();
     /// <summary>
     /// Button to create a lobby
     /// </summary>
@@ -70,6 +71,7 @@ public partial class SteamLobbyMenu : Control
         GodotSteamworks.Lobby.LobbyJoined += OnLobbyJoined;
         GodotSteamworks.Lobby.PlayerJoinedLobby += OnRemotePlayerLobbyStatusChanged;
         GodotSteamworks.Lobby.PlayerLeftLobby += OnRemotePlayerLobbyStatusChanged;
+
         GodotSteamworks.Lobby.LobbyDataUpdatedDetailed += (lobbyData) =>
         {
             // Update the members list when lobby data is updated
@@ -78,14 +80,16 @@ public partial class SteamLobbyMenu : Control
                  && !GodotSteamworks.Lobby.IsLobbyOwner(_lobbyId))
             {
                 // Signal to start peer connection as client
-                EmitSignal(SignalName.SignalJoinGame, _lobbyId);
+                EmitSignal(SignalName.SignalGameJoined);
             }
         };
     }
 
+
     private void OnStartGameButtonPressed()
     {
-        EmitSignal(SignalName.SignalStartGame, _lobbyId);
+        StartHosting();
+        EmitSignal(SignalName.SignalGameHostReady);
     }
 
     private void OnBackButtonPressed()
@@ -142,7 +146,7 @@ public partial class SteamLobbyMenu : Control
         LobbyMembersListMenu.Visible = true;
         LobbyMembersListMenu.UpdateMembersList(lobbyId);
     }
-    
+
     /// <summary>
     /// Handler for when a remote player joins the lobby
     /// </summary>
@@ -152,5 +156,56 @@ public partial class SteamLobbyMenu : Control
     private void OnRemotePlayerLobbyStatusChanged(ulong lobbyId, ulong _, string __)
     {
         LobbyMembersListMenu.UpdateMembersList(_lobbyId);
+    }
+
+    /// <summary>
+    /// Starts the host connection for godot's multiplayer via steam p2p
+    /// </summary>
+    private void StartHosting()
+    {
+        GD.Print("Hosting Game Session");
+        try
+        {
+            var steamMultiplayerPeer = new SteamMultiplayerPeer();
+            var steamErr = steamMultiplayerPeer.CreateServer(0);
+            if (steamErr == Error.Ok)
+            {
+                Multiplayer.MultiplayerPeer = steamMultiplayerPeer;
+                GD.Print("Hosting via Steam P2P successful");
+                GodotSteamworks.Lobby.SetLobbyData(_lobbyId, "host_ready", "true");
+            }
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Failed to start hosting: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Joins a godot multiplayer game via steam p2p
+    /// </summary>
+    private void ConnectToGameServer()
+    {
+        GD.Print("Joining Game Session");
+        if (!GodotSteamworks.Instance.IsInitalized)
+        {
+            GD.PrintErr("GodotSteamworks is not initialized! Multiplayer only supported when Steam is running and initialized for the demo");
+            return;
+        }
+
+        try
+        {
+            var steamMultiplayerPeer = new SteamMultiplayerPeer();
+            var steamErr = steamMultiplayerPeer.CreateClient(GodotSteamworks.Lobby.GetLobbyOwner(_lobbyId), 0);
+            if (steamErr == Error.Ok)
+            {
+                // Use the MultiplayerPeer property for Godot compatibility
+                Multiplayer.MultiplayerPeer = steamMultiplayerPeer;
+            }
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"Failed to join game: {ex.Message}");
+        }
     }
 }
