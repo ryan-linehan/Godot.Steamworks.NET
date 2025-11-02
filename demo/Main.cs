@@ -8,21 +8,21 @@ using System;
 public partial class Main : Node
 {
     [Export]
-    SteamLobbyMenu SteamLobbyMenu = null!;
+    NetworkingCanvas NetworkingCanvas = null!;
     [Export]
     Game Game = null!;
-    ulong SteamLobbyId = 0;
-    Control _networkMenu = null!;
+    NetworkingCanvas _networkMenu = null!;
     public override void _Ready()
     {
-        _networkMenu = SteamLobbyMenu;
-        SteamLobbyMenu.SignalGameHostReady += OnHostGame;
-        SteamLobbyMenu.SignalGameJoined += OnJoinGame;
+        _networkMenu = NetworkingCanvas;
+        _networkMenu.SignalGameHostReady += OnHostGame;
+        _networkMenu.SignalGameJoined += OnJoinGame;
     }
 
     private void OnJoinGame()
     {
         _networkMenu.Visible = false;
+        Game.StartGame();
     }
 
 

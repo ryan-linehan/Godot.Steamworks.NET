@@ -109,7 +109,7 @@ public partial class SteamworksLobby : Godot.RefCounted
     public async Task<ulong[]> SearchLobbiesAsync(int maxResults = 50)
     {
         var godotSteam = GodotSteamworks.Instance;
-        if (godotSteam == null || !godotSteam.IsInitalized)
+        if (godotSteam == null || !godotSteam.IsInitialized)
         {
             GodotSteamworksLogger.LogError("Steam is not initialized!");
             return Array.Empty<ulong>();
@@ -147,7 +147,7 @@ public partial class SteamworksLobby : Godot.RefCounted
     public ulong[] GetFriendLobbies()
     {
         var godotSteam = GodotSteamworks.Instance;
-        if (godotSteam == null || !godotSteam.IsInitalized)
+        if (godotSteam == null || !godotSteam.IsInitialized)
         {
             GodotSteamworksLogger.LogError("Steam is not initialized!");
             return Array.Empty<ulong>();
@@ -180,7 +180,7 @@ public partial class SteamworksLobby : Godot.RefCounted
     public void SearchLobbies(int maxResults = 50)
     {
         var godotSteam = GodotSteamworks.Instance;
-        if (godotSteam == null || !godotSteam.IsInitalized)
+        if (godotSteam == null || !godotSteam.IsInitialized)
         {
             GodotSteamworksLogger.LogError("Steam is not initialized!");
             return;
@@ -266,7 +266,7 @@ public partial class SteamworksLobby : Godot.RefCounted
         }
 
         var godotSteam = GodotSteamworks.Instance;
-        if (godotSteam == null || !godotSteam.IsInitalized)
+        if (godotSteam == null || !godotSteam.IsInitialized)
         {
             GodotSteamworksLogger.LogError("Steam is not initialized!");
             EmitSignal(SignalName.LobbyJoinFailed, 0UL, "Steam not initialized");
@@ -305,7 +305,7 @@ public partial class SteamworksLobby : Godot.RefCounted
         }
 
         var godotSteam = GodotSteamworks.Instance;
-        if (godotSteam == null || !godotSteam.IsInitalized)
+        if (godotSteam == null || !godotSteam.IsInitialized)
         {
             GodotSteamworksLogger.LogError("Steam is not initialized!");
             return;
@@ -323,7 +323,7 @@ public partial class SteamworksLobby : Godot.RefCounted
     public async Task<bool> JoinLobbyAsync(ulong lobbyId)
     {
         var godotSteam = GodotSteamworks.Instance;
-        if (godotSteam == null || !godotSteam.IsInitalized)
+        if (godotSteam == null || !godotSteam.IsInitialized)
         {
             GodotSteamworksLogger.LogError("Steam is not initialized!");
             EmitSignal(SignalName.LobbyJoinFailed, lobbyId, "Steam not initialized");
@@ -362,7 +362,7 @@ public partial class SteamworksLobby : Godot.RefCounted
     public void JoinLobby(CSteamID lobbyId)
     {
         var godotSteam = GodotSteamworks.Instance;
-        if (godotSteam == null || !godotSteam.IsInitalized)
+        if (godotSteam == null || !godotSteam.IsInitialized)
         {
             GodotSteamworksLogger.LogError("Steam is not initialized!");
             return;
@@ -380,7 +380,7 @@ public partial class SteamworksLobby : Godot.RefCounted
     public void LeaveLobby(ulong lobbyId)
     {
         var godotSteam = GodotSteamworks.Instance;
-        if (godotSteam == null || !godotSteam.IsInitalized)
+        if (godotSteam == null || !godotSteam.IsInitialized)
         {
             GodotSteamworksLogger.LogError("Steam is not initialized!");
             return;

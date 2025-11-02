@@ -187,7 +187,7 @@ public partial class SteamLobbyMenu : Control
     private void ConnectToGameServer()
     {
         GD.Print("Joining Game Session");
-        if (!GodotSteamworks.Instance.IsInitalized)
+        if (!GodotSteamworks.Instance.IsInitialized)
         {
             GD.PrintErr("GodotSteamworks is not initialized! Multiplayer only supported when Steam is running and initialized for the demo");
             return;

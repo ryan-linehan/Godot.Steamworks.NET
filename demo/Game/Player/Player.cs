@@ -17,7 +17,6 @@ public partial class Player : CharacterBody2D
         set
         {
             _peerId = value;
-            SetMultiplayerAuthority((int)value);
         }
     }
     [Export]
@@ -27,17 +26,26 @@ public partial class Player : CharacterBody2D
     {
         base._Ready();
         AddToGroup("Player");
+            GD.Print($"[{Multiplayer.GetUniqueId()}] Player._Ready() - PeerId: {PeerId}, Authority: {GetMultiplayerAuthority()}");
+
+        if (!Multiplayer.IsServer())
+        {
+            SetMultiplayerAuthority((int)PeerId);
+        }
+
         if (PeerId == Multiplayer.GetUniqueId())
         {
             var camera = PlayerCamera.Instantiate<Camera2D>();
             AddChild(camera, true);
+            GD.Print($"[{Multiplayer.GetUniqueId()}] CAMERA ADDED to player {PeerId}");
         }
     }
 
     public override void _Process(double delta)
     {
         base._Process(delta);
-        GD.Print($"Player {PeerId} position: {GlobalPosition}");
+        if (Multiplayer.GetUniqueId() != PeerId)
+            return;
         ProcessMovement(_direction);
     }
 

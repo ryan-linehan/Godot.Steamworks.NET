@@ -24,7 +24,7 @@ public partial class GodotSteamworks : Node
     /// <summary>
     /// Whether Steamworks has been successfully initialized or not
     /// </summary>
-    public bool IsInitalized { get; private set; } = false;
+    public bool IsInitialized { get; private set; } = false;
     /// <summary>
     /// Whether to call SteamAPI.RunCallbacks() in the _Process method of the singleton.
     /// If true, Steam callbacks will be handled automatically. Otherwise the user is expected
@@ -43,7 +43,7 @@ public partial class GodotSteamworks : Node
             GodotSteamworksLogger.LogDebug("Steam is running: " + SteamAPI.IsSteamRunning());
             if (SteamAPI.Init())
             {
-                IsInitalized = true;
+                IsInitialized = true;
                 SetProcess(HandleSteamCallbacks);
                 if (!HandleSteamCallbacks)
                 {
