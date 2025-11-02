@@ -11,24 +11,13 @@ script = ExtResource("1_r0du0")
 NetworkingCanvas = NodePath("NetworkingCanvas")
 Game = NodePath("Game")
 
-[node name="NetworkingCanvas" type="CanvasLayer" parent="." node_paths=PackedStringArray("SteamLobbyMenu", "GodotMenu", "SinglePlayerMenu", "MenuOptionButton")]
+[node name="NetworkingCanvas" type="CanvasLayer" parent="." node_paths=PackedStringArray("SteamLobbyMenu", "GodotMenu", "SinglePlayerMenu", "MenuOptionButton", "RefreshButton")]
 script = ExtResource("2_fos0i")
 SteamLobbyMenu = NodePath("SteamLobbyMenu")
 GodotMenu = NodePath("GodotConnectMenu")
 SinglePlayerMenu = NodePath("SinglePlayerMenu")
-MenuOptionButton = NodePath("NetworkLobbyOptions")
-
-[node name="NetworkLobbyOptions" type="OptionButton" parent="NetworkingCanvas"]
-offset_left = 16.0
-offset_top = 64.0
-offset_right = 107.0
-offset_bottom = 84.0
-selected = 0
-item_count = 2
-popup/item_0/text = "Godot"
-popup/item_0/id = 0
-popup/item_1/text = "Steam"
-popup/item_1/id = 1
+MenuOptionButton = NodePath("HBoxContainer/NetworkLobbyOptions")
+RefreshButton = NodePath("HBoxContainer/RefreshButton")
 
 [node name="SteamLobbyMenu" parent="NetworkingCanvas" instance=ExtResource("1_glv2v")]
 visible = false
@@ -42,5 +31,26 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="NetworkingCanvas"]
+offset_left = 16.0
+offset_top = 64.0
+offset_right = 56.0
+offset_bottom = 104.0
+theme_override_constants/separation = 8
+
+[node name="NetworkLobbyOptions" type="OptionButton" parent="NetworkingCanvas/HBoxContainer"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Godot"
+popup/item_0/id = 0
+popup/item_1/text = "Steam"
+popup/item_1/id = 1
+
+[node name="RefreshButton" type="Button" parent="NetworkingCanvas/HBoxContainer"]
+layout_mode = 2
+text = "refresh"
 
 [node name="Game" parent="." instance=ExtResource("2_uu6xs")]

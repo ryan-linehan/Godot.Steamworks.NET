@@ -38,13 +38,17 @@ public partial class GodotSteamworks : Node
     {
         base._EnterTree();
         Instance = this;
+        InitGodotSteamworks();
+    }
+
+    public void InitGodotSteamworks()
+    {
         try
         {
             GodotSteamworksLogger.LogDebug("Steam is running: " + SteamAPI.IsSteamRunning());
             if (SteamAPI.Init())
             {
                 IsInitialized = true;
-                SetProcess(HandleSteamCallbacks);
                 if (!HandleSteamCallbacks)
                 {
                     GodotSteamworksLogger.LogInfo("Automatic Steam callback handling is disabled. You must call SteamAPI.RunCallbacks() manually.");
@@ -53,6 +57,7 @@ public partial class GodotSteamworks : Node
             }
             else
             {
+                IsInitialized = false;
                 SteamAPI.InitEx(out var outSteamErrMsg);
                 GodotSteamworksLogger.LogError("Steamworks initialization failed! err: " + outSteamErrMsg);
             }
@@ -60,8 +65,17 @@ public partial class GodotSteamworks : Node
         catch (Exception ex)
         {
             GodotSteamworksLogger.LogError(ex.Message);
+            IsInitialized = false;
         }
     }
+
+    public override void _Ready()
+    {
+        base._Ready();
+        if (!IsInitialized || !HandleSteamCallbacks)
+            SetProcess(false);
+    }
+
 
     public override void _Process(double delta)
     {

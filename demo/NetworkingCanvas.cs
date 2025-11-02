@@ -21,6 +21,8 @@ public partial class NetworkingCanvas : CanvasLayer
     public Control SinglePlayerMenu = null!;
     [Export]
     public OptionButton MenuOptionButton = null!;
+    [Export]
+    public Button RefreshButton = null!;
 
     public override void _Ready()
     {
@@ -30,6 +32,7 @@ public partial class NetworkingCanvas : CanvasLayer
         GodotMenu.SignalGameJoined += EmitJoinGame;
         MenuOptionButton.ItemSelected += OnMenuOptionSelected;
         MenuOptionButton.Clear();
+        RefreshButton.Pressed += OnRefreshButtonPressed;
         foreach (NetworkingCanvasTypes type in Enum.GetValues(typeof(NetworkingCanvasTypes)))
         {
             if (type == NetworkingCanvasTypes.SteamworksNET && !GodotSteamworks.Instance.IsInitialized)
@@ -46,19 +49,28 @@ public partial class NetworkingCanvas : CanvasLayer
         OnMenuOptionSelected(MenuOptionButton.Selected);
     }
 
-    private void OnMenuOptionSelected(long optionId)
+    private void OnRefreshButtonPressed()
     {
-        SteamLobbyMenu.Visible = optionId == (long)NetworkingCanvasTypes.SteamworksNET;
-        GodotMenu.Visible = optionId == (long)NetworkingCanvasTypes.GodotENet;
-        if (optionId == (long)NetworkingCanvasTypes.None)
+        AutoDetectNetworking();
+    }
+
+
+    private void OnMenuOptionSelected(long optionIdx)
+    {
+        var optionValue = MenuOptionButton.GetItemId((int)optionIdx);
+        SteamLobbyMenu.Visible = optionValue == (long)NetworkingCanvasTypes.SteamworksNET;
+        GodotMenu.Visible = optionValue == (long)NetworkingCanvasTypes.GodotENet;
+        RefreshButton.Visible = false;
+        if (optionValue == (long)NetworkingCanvasTypes.None)
         {
             SinglePlayerMenu.Visible = true;
             SteamLobbyMenu.Visible = false;
             GodotMenu.Visible = false;
         }
-        else if (optionId == (long)NetworkingCanvasTypes.AutoDetect)
+        else if (optionValue == (long)NetworkingCanvasTypes.AutoDetect)
         {
             AutoDetectNetworking();
+            RefreshButton.Visible = true;
         }
     }
 
@@ -74,10 +86,21 @@ public partial class NetworkingCanvas : CanvasLayer
 
     private void AutoDetectNetworking()
     {
+        // Retry initializing GodotSteamworks if not already initialized
+        if (!GodotSteamworks.Instance.IsInitialized)
+        {
+            GodotSteamworks.Instance.InitGodotSteamworks();
+        }
+
+
         if (GodotSteamworks.Instance.IsInitialized)
         {
-            SteamLobbyMenu.Visible = true;
-            GodotMenu.Visible = false;
+            var index = MenuOptionButton.GetItemIndex((int)NetworkingCanvasTypes.SteamworksNET);
+            if (index == -1)
+            {
+                MenuOptionButton.AddItem(NetworkingCanvasTypes.SteamworksNET.ToString(), (int)NetworkingCanvasTypes.SteamworksNET);
+            }
+            MenuOptionButton.Selected = (int)NetworkingCanvasTypes.SteamworksNET;
         }
         else
         {
