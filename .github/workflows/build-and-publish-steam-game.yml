@@ -50,27 +50,33 @@ jobs:
                   path: build/windows
 
     export-linux:
-      name: Linux Export
-      runs-on: ubuntu-22.04  # Use 22.04 with godot 4
-      container:
-        barichello/godot-ci:mono-4.5.1
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-          with:
-            lfs: true
-    
-        - name: Linux Build
-          run: |
-            mkdir -v -p build/linux
-            EXPORT_DIR="$(readlink -f build)"
-            cd $PROJECT_PATH
-            godot --headless --verbose --export-release "Linux" "$EXPORT_DIR/linux/$EXPORT_NAME.x86_64"
-        - name: Upload Artifact
-          uses: actions/upload-artifact@v4
-          with:
-            name: linux
-            path: build/linux
+        name: Linux Export
+        runs-on: ubuntu-22.04 # Use 22.04 with godot 4
+        container: barichello/godot-ci:mono-4.5.1
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  lfs: true
+
+            - name: Setup
+              run: |
+                  mkdir -v -p ~/.local/share/godot/export_templates/
+                  mkdir -v -p ~/.config/
+                  mv /root/.config/godot ~/.config/godot
+                  mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono
+
+            - name: Linux Build
+              run: |
+                  mkdir -v -p build/linux
+                  EXPORT_DIR="$(readlink -f build)"
+                  cd $PROJECT_PATH
+                  godot --headless --verbose --export-release "Linux" "$EXPORT_DIR/linux/$EXPORT_NAME.x86_64"
+            - name: Upload Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: linux
+                  path: build/linux
 
     # export-mac:
     # name: Mac Export
@@ -121,8 +127,8 @@ jobs:
             - name: Download Linux Artifact
               uses: actions/download-artifact@v4
               with:
-                name: linux
-                path: build/linux
+                  name: linux
+                  path: build/linux
             - name: fake mac folder
               run: |
                   mkdir -v -p build/mac
