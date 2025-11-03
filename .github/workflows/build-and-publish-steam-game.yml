@@ -53,7 +53,7 @@ jobs:
       name: Linux Export
       runs-on: ubuntu-22.04  # Use 22.04 with godot 4
       container:
-        barichello/godot-ci:mono-4.4.1
+        barichello/godot-ci:mono-4.5.1
       steps:
         - name: Checkout
           uses: actions/checkout@v4
