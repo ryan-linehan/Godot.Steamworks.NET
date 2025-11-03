@@ -69,13 +69,6 @@
       <Link>Steamworks.NET.dll</Link>
     </Content>
     
-    <Content Include="..\..\libs\Steamworks.NET\2025.162.1\Windows-x64\steam_appid.txt">
-      <Pack>true</Pack>
-      <PackagePath>runtimes\win-x64\native\steam_appid.txt</PackagePath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>steam_appid.txt</Link>
-    </Content>
-    
     <!-- macOS/Linux libraries -->
     <Content Include="..\..\libs\Steamworks.NET\2025.162.1\OSX-Linux-x64\Steamworks.NET.dll">
       <Pack>true</Pack>
@@ -86,12 +79,6 @@
     <Content Include="..\..\libs\Steamworks.NET\2025.162.1\OSX-Linux-x64\Steamworks.NET.dll">
       <Pack>true</Pack>
       <PackagePath>lib\net9.0\Steamworks.NET.dll</PackagePath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    
-    <Content Include="..\..\libs\Steamworks.NET\2025.162.1\OSX-Linux-x64\steam_appid.txt">
-      <Pack>true</Pack>
-      <PackagePath>runtimes\osx-x64\native\steam_appid.txt</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     
