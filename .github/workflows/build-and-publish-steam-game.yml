@@ -49,34 +49,28 @@ jobs:
                   name: windows
                   path: build/windows
 
-    # export-linux:
-    #   name: Linux Export
-    #   runs-on: ubuntu-22.04  # Use 22.04 with godot 4
-    #   needs: restore-cache
-    #   container:
-    #     barichello/godot-ci:mono-4.4.1
-    #   steps:
-    #     - name: Checkout
-    #       uses: actions/checkout@v4
-    #       with:
-    #         lfs: true
-    #
-    #     - name: Linux Build
-    #       run: |
-    #         # Set up X11 for any Aseprite usage during build
-    #         export DISPLAY=:99
-    #         Xvfb :99 -screen 0 1024x768x24 -ac +extension GLX +render -noreset &
-    #         sleep 3
-
-    #         mkdir -v -p build/linux
-    #         EXPORT_DIR="$(readlink -f build)"
-    #         cd $PROJECT_PATH
-    #         godot --headless --verbose --export-release "Linux/X11" "$EXPORT_DIR/linux/$EXPORT_NAME.x86_64"
-    #     - name: Upload Artifact
-    #       uses: actions/upload-artifact@v4
-    #       with:
-    #         name: linux
-    #         path: build/linux
+    export-linux:
+      name: Linux Export
+      runs-on: ubuntu-22.04  # Use 22.04 with godot 4
+      container:
+        barichello/godot-ci:mono-4.4.1
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            lfs: true
+    
+        - name: Linux Build
+          run: |
+            mkdir -v -p build/linux
+            EXPORT_DIR="$(readlink -f build)"
+            cd $PROJECT_PATH
+            godot --headless --verbose --export-release "Linux" "$EXPORT_DIR/linux/$EXPORT_NAME.x86_64"
+        - name: Upload Artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: linux
+            path: build/linux
 
     # export-mac:
     # name: Mac Export
@@ -124,11 +118,15 @@ jobs:
             #   with:
             #     name: mac
             #     path: build/mac
-            # - name: Download Linux Artifact
-            #   uses: actions/download-artifact@v4
-            #   with:
-            #     name: linux
-            #     path: build/linux
+            - name: Download Linux Artifact
+              uses: actions/download-artifact@v4
+              with:
+                name: linux
+                path: build/linux
+            - name: fake mac folder
+              run: |
+                  mkdir -v -p build/mac
+                  echo "fake mac build" > build/mac/fake.txt
             # - name: Unzip Mac Build
             #   run: |
             #     unzip -o build/mac/here_for_the_signal.zip -d build/mac/
@@ -142,8 +140,8 @@ jobs:
                   buildDescription: v1.2.3
                   rootPath: build
                   depot1Path: windows
-                  # depot2Path: mac
-                  # depot3Path: linux
+                  depot2Path: mac
+                  depot3Path: linux
                   releaseBranch: steam_multiplayer
 # TODO: Android upload job
 # TODO: iOS upload job (once supported by https://github.com/abarichello/godot-ci/blob/master/.github/workflows/godot-ci.yml)
