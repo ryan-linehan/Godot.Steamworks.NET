@@ -39,6 +39,9 @@ jobs:
             echo "VERSION_CHANGED=true" >> $GITHUB_ENV
           fi
 
+      - name: Add local NuGet source
+        run: dotnet nuget add source ./libs/Steamworks.NET.AnyCPU --name local
+        
       - name: restore, build, pack GodotSteamworks.NET
         run: |
           dotnet restore ./src/GodotSteamworks.NET/GodotSteamworks.NET.csproj
