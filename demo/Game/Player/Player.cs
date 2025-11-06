@@ -24,6 +24,8 @@ public partial class Player : CharacterBody2D
     [Export]
     public Vector2 NetworkPosition { get; set; } = Vector2.Zero;
     Vector2 _direction = Vector2.Zero;
+    private Vector2 _lastNetworkPosition = Vector2.Zero;
+    
     public override void _Ready()
     {
         base._Ready();
@@ -44,18 +46,25 @@ public partial class Player : CharacterBody2D
         }
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
-        base._Process(delta);
+        base._PhysicsProcess(delta);
         if (Multiplayer.GetUniqueId() != PeerId)
         {
             // Smoothly interpolate to the networked position if not the local player
-            GlobalPosition = GlobalPosition.Lerp(NetworkPosition, 0.2f);
+            GlobalPosition = GlobalPosition.Lerp(NetworkPosition, 0.25f);
         }
         else
         {
             ProcessMovement(_direction);
-            NetworkPosition = GlobalPosition;
+            
+            // Only update NetworkPosition if the player has moved significantly
+            // This reduces unnecessary network traffic
+            if (GlobalPosition.DistanceSquaredTo(_lastNetworkPosition) > 1.0f) // ~1 pixel threshold
+            {
+                NetworkPosition = GlobalPosition;
+                _lastNetworkPosition = GlobalPosition;
+            }
         }
     }
 
