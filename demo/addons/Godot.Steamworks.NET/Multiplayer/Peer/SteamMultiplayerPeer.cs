@@ -14,12 +14,6 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
     private const int MaxMessageCount = 255;
     private const int MaxSteamPacketSize = 512 * 1024;
     /// <summary>
-    /// If true, flushes the connection immediately after sending packets.
-    /// This can reduce latency at the cost of increased bandwidth usage defaults to enabled for best user experience
-    /// and easiest setup.
-    /// </summary>
-    public bool ImmediateFlush { get; set; } = true;
-    /// <summary>
     /// If true, disables Nagle's algorithm for sending packets.
     /// Steam recommends you understand the implications before changing this setting. Since
     /// Godot's high level multiplayer batches the packets for us anyways generally this is defaulted to true.
@@ -150,27 +144,19 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
                     returnValue = errorCode;
                 }
             }
-
-            if (ImmediateFlush)
-            {
-                // Flush all connections after broadcast
-                foreach (var connection in connectionsBySteamId64)
-                {
-                    connection.Value.Flush();
-                }
-            }
             return returnValue;
         }
         else
         {
             SteamPacketPeer packet = new SteamPacketPeer(buffer, transferMode: packetTransferMode);
             SteamConnection? connection = GetConnectionByPeer(targetPeer);
-            if (connection == null) return Error.Unconfigured;
-            Error result = connection.Send(packet);
-            if (ImmediateFlush)
+            if (connection == null)
             {
-                connection.Flush();
+                GodotSteamworksLogger.LogDebug($"[SteamMultiplayerPeer] _PutPacketScript: No connection for targetPeer={targetPeer}");
+                return Error.Unconfigured;
             }
+            GodotSteamworksLogger.LogDebug($"[SteamMultiplayerPeer] Sending packet to peer {targetPeer} mode={transferModeStr} size={buffer.Length}B at {sendTimestamp}ms");
+            Error result = connection.Send(packet);
             return result;
         }
     }
