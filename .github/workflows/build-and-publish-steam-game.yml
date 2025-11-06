@@ -39,7 +39,7 @@ jobs:
                   # Set environment variable that MSBuild can read
                   export STEAM_TARGET_PLATFORM=Windows
                   # build before opening the editor to ensure that c# plugin scripts are built
-                  # dotnet build
+                  dotnet build
                   # Export (Godot will trigger the build and our MSBuild target will see the env var)
                   godot --headless --verbose --export-release "Windows Desktop" "$EXPORT_DIR/windows/$EXPORT_NAME.exe"
 
