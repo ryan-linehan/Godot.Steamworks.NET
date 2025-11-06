@@ -13,8 +13,24 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
 {
     private const int MaxMessageCount = 255;
     private const int MaxSteamPacketSize = 512 * 1024;
-
-    public bool NoNagle { get; set; } = false;
+    /// <summary>
+    /// If true, flushes the connection immediately after sending packets.
+    /// This can reduce latency at the cost of increased bandwidth usage defaults to enabled for best user experience
+    /// and easiest setup.
+    /// </summary>
+    public bool ImmediateFlush { get; set; } = true;
+    /// <summary>
+    /// If true, disables Nagle's algorithm for sending packets.
+    /// Steam recommends you understand the implications before changing this setting. Since
+    /// Godot's high level multiplayer batches the packets for us anyways generally this is defaulted to true.
+    /// Most real time games will want this enabled to reduce latency.
+    /// </summary>
+    public bool NoNagle { get; set; } = true;
+    /// <summary>
+    /// If true, enables TCP_NODELAY on the connection.
+    /// Which means - if the message cannot be sent very soon (because the connection is still doing some initial handshaking, route negotiations, etc), then just drop it. 
+    /// This is only applicable for unreliable messages. Using this flag on reliable messages is invalid.
+    /// </summary>
     public bool NoDelay { get; set; } = false;
 
     private System.Collections.Generic.Dictionary<ulong, SteamConnection> connectionsBySteamId64 = new System.Collections.Generic.Dictionary<ulong, SteamConnection>();
@@ -52,7 +68,7 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
         Configs = new Godot.Collections.Dictionary<ESteamNetworkingConfigValue, Variant>();
     }
 
-    public Error CreateServer(int localVirtualPort)
+    public Error CreateHost(int localVirtualPort)
     {
         if (IsActive())
         {
@@ -69,7 +85,7 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
         }
 
         uniqueId = 1;
-        mode = MultiplayerPeerMode.SERVER;
+        mode = MultiplayerPeerMode.HOST;
         connectionStatus = ConnectionStatus.Connected;
         return Error.Ok;
     }
@@ -134,6 +150,15 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
                     returnValue = errorCode;
                 }
             }
+
+            if (ImmediateFlush)
+            {
+                // Flush all connections after broadcast
+                foreach (var connection in connectionsBySteamId64)
+                {
+                    connection.Value.Flush();
+                }
+            }
             return returnValue;
         }
         else
@@ -141,7 +166,12 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
             SteamPacketPeer packet = new SteamPacketPeer(buffer, transferMode: packetTransferMode);
             SteamConnection? connection = GetConnectionByPeer(targetPeer);
             if (connection == null) return Error.Unconfigured;
-            return connection.Send(packet);
+            Error result = connection.Send(packet);
+            if (ImmediateFlush)
+            {
+                connection.Flush();
+            }
+            return result;
         }
     }
 
@@ -293,7 +323,7 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
         connectionsBySteamId64.Remove(connection.SteamId);
         peerIdToSteamId.Remove(peer);
 
-        if (mode == MultiplayerPeerMode.CLIENT || mode == MultiplayerPeerMode.SERVER)
+        if (mode == MultiplayerPeerMode.CLIENT || mode == MultiplayerPeerMode.HOST)
         {
             SteamConnection? serverConnection = GetConnectionByPeer(0);
             serverConnection?.Flush();
@@ -316,7 +346,7 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
 
     public override bool _IsServerRelaySupported()
     {
-        return mode == MultiplayerPeerMode.SERVER || mode == MultiplayerPeerMode.CLIENT;
+        return mode == MultiplayerPeerMode.HOST || mode == MultiplayerPeerMode.CLIENT;
     }
 
     public override ConnectionStatus _GetConnectionStatus()
@@ -530,9 +560,12 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
 
     private enum MultiplayerPeerMode
     {
-        NONE, SERVER, CLIENT
+        NONE, HOST, CLIENT
     }
 
+    /// <summary>
+    /// A packet to be sent or received via Steam networking.
+    /// </summary>
     private class SteamPacketPeer
     {
         public byte[] Data { get; private set; } = new byte[MaxSteamPacketSize];
@@ -553,6 +586,9 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
         }
     }
 
+    /// <summary>
+    /// A connection to a Steam peer.
+    /// </summary>
     private class SteamConnection
     {
 
@@ -566,6 +602,11 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
             SteamNetworkingSockets.CloseConnection(ConnectionHandle, (int)ESteamNetConnectionEnd.k_ESteamNetConnectionEnd_App_Generic, "Disconnect Default!", false);
         }
 
+        /// <summary>
+        /// Sends a raw packet to the peer.
+        /// </summary>
+        /// <param name="packet"></param>
+        /// <returns></returns>
         public EResult RawSend(SteamPacketPeer packet)
         {
             IntPtr pData = System.Runtime.InteropServices.Marshal.AllocHGlobal(packet.Data.Length);
@@ -580,6 +621,10 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
             }
         }
 
+        /// <summary>
+        /// Sends all pending packets, retrying reliable packets as needed.
+        /// </summary>
+        /// <returns></returns>
         public Error SendPending()
         {
             while (pendingRetryPackets.Count > 0)

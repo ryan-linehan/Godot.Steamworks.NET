@@ -167,7 +167,7 @@ public partial class SteamLobbyMenu : Control
         try
         {
             var steamMultiplayerPeer = new SteamMultiplayerPeer();
-            var steamErr = steamMultiplayerPeer.CreateServer(0);
+            var steamErr = steamMultiplayerPeer.CreateHost(0);
             if (steamErr == Error.Ok)
             {
                 Multiplayer.MultiplayerPeer = steamMultiplayerPeer;

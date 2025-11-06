@@ -21,18 +21,21 @@ public partial class Player : CharacterBody2D
     }
     [Export]
     public PackedScene PlayerCamera { get; set; } = null!;
+    [Export]
+    public Vector2 NetworkPosition { get; set; } = Vector2.Zero;
     Vector2 _direction = Vector2.Zero;
     public override void _Ready()
     {
         base._Ready();
         AddToGroup("Player");
-            GD.Print($"[{Multiplayer.GetUniqueId()}] Player._Ready() - PeerId: {PeerId}, Authority: {GetMultiplayerAuthority()}");
+        GD.Print($"[{Multiplayer.GetUniqueId()}] Player._Ready() - PeerId: {PeerId}, Authority: {GetMultiplayerAuthority()}");
 
         if (!Multiplayer.IsServer())
         {
             SetMultiplayerAuthority((int)PeerId);
         }
 
+        // Add a camera if this is the local player
         if (PeerId == Multiplayer.GetUniqueId())
         {
             var camera = PlayerCamera.Instantiate<Camera2D>();
@@ -45,8 +48,15 @@ public partial class Player : CharacterBody2D
     {
         base._Process(delta);
         if (Multiplayer.GetUniqueId() != PeerId)
-            return;
-        ProcessMovement(_direction);
+        {
+            // Smoothly interpolate to the networked position if not the local player
+            GlobalPosition = GlobalPosition.Lerp(NetworkPosition, 0.2f);
+        }
+        else
+        {
+            ProcessMovement(_direction);
+            NetworkPosition = GlobalPosition;
+        }
     }
 
     public override void _UnhandledInput(InputEvent inputEvent)
