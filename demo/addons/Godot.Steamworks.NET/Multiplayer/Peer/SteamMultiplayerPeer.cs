@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Steamworks;
 using Godot.Collections;
 using System.Linq;
-using Godot.Steamworks.Net;
 
 /// <summary>
 /// A multiplayer peer implementation for Steam networking.
@@ -153,10 +152,8 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
             SteamConnection? connection = GetConnectionByPeer(targetPeer);
             if (connection == null)
             {
-                GodotSteamworksLogger.LogDebug($"[SteamMultiplayerPeer] _PutPacketScript: No connection for targetPeer={targetPeer}");
                 return Error.Unconfigured;
-            }
-            GodotSteamworksLogger.LogDebug($"[SteamMultiplayerPeer] Sending packet to peer {targetPeer} mode={transferModeStr} size={buffer.Length}B at {sendTimestamp}ms");
+            }            
             Error result = connection.Send(packet);
             return result;
         }
