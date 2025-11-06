@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="GodotSteamworks.NET" Version="2025.162.1-beta-004" />
+    <PackageReference Include="GodotSteamworks.NET" Version="2025.162.1-beta-005" />
   </ItemGroup>
   <Target Name="PrintRuntimeIdentifier" AfterTargets="Build">
     <Message Importance="High" Text="Runtime Identifier: $(RuntimeIdentifier)" />
