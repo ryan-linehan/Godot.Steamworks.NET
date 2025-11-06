@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Steamworks;
 using Godot.Collections;
 using System.Linq;
+using Godot.Steamworks.Net;
 
 /// <summary>
 /// A multiplayer peer implementation for Steam networking.
