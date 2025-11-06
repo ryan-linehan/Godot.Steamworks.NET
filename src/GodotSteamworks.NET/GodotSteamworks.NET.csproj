@@ -27,7 +27,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="GodotSharp" Version="[4.4.0, 4.6.0)" />
-    <PackageReference Include="Steamworks.NET.AnyCPU" Version="2025.162.6-anycpu021" />
+    <PackageReference Include="Steamworks.NET.AnyCPU" Version="2025.162.6-anycpu021" Pack="true" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
