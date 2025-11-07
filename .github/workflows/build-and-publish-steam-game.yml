@@ -38,8 +38,11 @@ jobs:
 
                   # Set environment variable that MSBuild can read
                   export STEAM_TARGET_PLATFORM=Windows
-                  # build before opening the editor to ensure that c# plugin scripts are built
-                  dotnet build
+
+                  # Restore and build C# plugin scripts before opening the editor
+                  dotnet restore
+                  dotnet build --configuration Release
+
                   # Export (Godot will trigger the build and our MSBuild target will see the env var)
                   godot --headless --verbose --export-release "Windows Desktop" "$EXPORT_DIR/windows/$EXPORT_NAME.exe"
 
@@ -71,6 +74,12 @@ jobs:
                   mkdir -v -p build/linux
                   EXPORT_DIR="$(readlink -f build)"
                   cd $PROJECT_PATH
+
+                  # Restore and build C# plugin scripts before opening the editor
+                  dotnet restore
+                  dotnet build --configuration Release
+
+                  # Export
                   godot --headless --verbose --export-release "Linux" "$EXPORT_DIR/linux/$EXPORT_NAME.x86_64"
             - name: Upload Artifact
               uses: actions/upload-artifact@v4

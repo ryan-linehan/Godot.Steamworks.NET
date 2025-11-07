@@ -39,9 +39,9 @@ jobs:
             echo "VERSION_CHANGED=true" >> $GITHUB_ENV
           fi
           
-      - name: restore, build, pack GodotSteamworks.NET
+      - name: Restore, build, and pack GodotSteamworks.NET
         run: |
-          dotnet restore ./src/GodotSteamworks.NET/GodotSteamworks.NET.csproj --source ./libs/Steamworks.NET.AnyCPU --source https://api.nuget.org/v3/index.json
+          dotnet restore ./src/GodotSteamworks.NET/GodotSteamworks.NET.csproj
           dotnet pack ./src/GodotSteamworks.NET/GodotSteamworks.NET.csproj \
             --configuration Release \
             --output ./src/GodotSteamworks.NET/bin/Release
