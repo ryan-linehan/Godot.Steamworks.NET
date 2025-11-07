@@ -46,6 +46,13 @@ jobs:
             --configuration Release \
             --output ./src/GodotSteamworks.NET/bin/Release
 
+      - name: Upload NuGet package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: ./src/GodotSteamworks.NET/bin/Release/*.nupkg
+          retention-days: 30
+
       # Get a short-lived NuGet API key
       - name: NuGet login (OIDC → temp API key)
         if: env.VERSION_CHANGED == 'true'
