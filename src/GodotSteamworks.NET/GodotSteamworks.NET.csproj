@@ -6,7 +6,7 @@
 
     <!-- NuGet Package Metadata -->
     <PackageId>GodotSteamworks.NET</PackageId>
-    <Version>2025.162.1-beta-005</Version>
+    <Version>2025.162.1-beta-006</Version>
     <Authors>RcubDev</Authors>
     <Description>
       A Godot module that integrates Steamworks.NET for Steam API functionality in Godot games.
@@ -27,7 +27,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="GodotSharp" Version="[4.4.0, 4.6.0)" />
-    <PackageReference Include="Steamworks.NET.AnyCPU" Version="2025.162.6-anycpu021" Pack="true" />
+    <PackageReference Include="Steamworks.NET.AnyCPU" Version="2025.162.6-anycpu021" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />

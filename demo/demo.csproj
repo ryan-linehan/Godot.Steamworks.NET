@@ -6,6 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="GodotSteamworks.NET" Version="2025.162.1-beta-005" />
+    <PackageReference Include="GodotSteamworks.NET" Version="2025.162.1-beta-006" />
   </ItemGroup>
 </Project>
