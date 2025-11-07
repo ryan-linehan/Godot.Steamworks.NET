@@ -41,7 +41,7 @@ jobs:
 
                   # Restore and build C# plugin scripts before opening the editor
                   dotnet restore
-                  dotnet build --configuration Release
+                  dotnet build --configuration ExportRelease
 
                   # Export (Godot will trigger the build and our MSBuild target will see the env var)
                   godot --headless --verbose --export-release "Windows Desktop" "$EXPORT_DIR/windows/$EXPORT_NAME.exe"
@@ -77,7 +77,7 @@ jobs:
 
                   # Restore and build C# plugin scripts before opening the editor
                   dotnet restore
-                  dotnet build --configuration Release
+                  dotnet build --configuration ExportRelease
 
                   # Export
                   godot --headless --verbose --export-release "Linux" "$EXPORT_DIR/linux/$EXPORT_NAME.x86_64"
