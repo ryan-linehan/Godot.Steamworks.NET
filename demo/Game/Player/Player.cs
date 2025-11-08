@@ -32,12 +32,13 @@ public partial class Player : CharacterBody2D
     {
         base._Ready();
         AddToGroup("Player");
+
         if (Multiplayer.MultiplayerPeer is SteamMultiplayerPeer steamPeer)
         {
             var peerName = steamPeer.GetSteamDisplayNameFromPeerId((int)PeerId);
             PlayerNameLabel.Text = peerName;
-            GD.Print($"[{Multiplayer.GetUniqueId()}] Setting player name for peer {PeerId} to {peerName}");
         }
+        
         GD.Print($"[{Multiplayer.GetUniqueId()}] Player._Ready() - PeerId: {PeerId}, Authority: {GetMultiplayerAuthority()}");
         if (!Multiplayer.IsServer())
         {
