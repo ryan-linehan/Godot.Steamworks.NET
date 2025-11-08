@@ -1,7 +1,3 @@
-using System;
-using Godot;
-using Godot.Steamworks.Net.Multiplayer;
-using Steamworks;
 namespace Godot.Steamworks.Net;
 
 /// <summary>
@@ -49,6 +45,7 @@ public partial class GodotSteamworks : Node
             if (SteamAPI.Init())
             {
                 IsInitialized = true;
+                ParseCommandLineArgs();
                 if (!HandleSteamCallbacks)
                 {
                     GodotSteamworksLogger.LogInfo("Automatic Steam callback handling is disabled. You must call SteamAPI.RunCallbacks() manually.");
@@ -68,6 +65,34 @@ public partial class GodotSteamworks : Node
             IsInitialized = false;
         }
     }
+
+    /// <summary>
+    /// Parses command line arguments for Steam integration
+    /// </summary>
+    private static void ParseCommandLineArgs()
+    {
+        var args = System.Environment.GetCommandLineArgs();
+        GodotSteamworksLogger.LogInfo("Steam command line args: " + string.Join(", ", args));
+        bool nextIsLobby = false;
+        foreach (var arg in args)
+        {
+            GodotSteamworksLogger.LogDebug("Arg: " + arg);
+            if (arg.Equals("+connect_lobby"))
+            {
+                nextIsLobby = true;
+            }
+            else if (nextIsLobby)
+            {
+                if (ulong.TryParse(arg, out ulong lobbyId))
+                {
+                    GodotSteamworksLogger.LogInfo("Auto joining lobby from command line: " + lobbyId);
+                    Lobby.JoinLobby(new CSteamID(lobbyId));
+                }
+                nextIsLobby = false;
+            }
+        }
+    }
+
 
     public override void _Ready()
     {
