@@ -28,13 +28,16 @@ public partial class Player : CharacterBody2D
     private Vector2 _lastNetworkPosition = Vector2.Zero;
     [Export]
     public Label PlayerNameLabel = null!;
-    [Export]
-    public string PlayerName = "";
     public override void _Ready()
     {
         base._Ready();
         AddToGroup("Player");
-        PlayerNameLabel.Text = PlayerName;
+        if (Multiplayer.MultiplayerPeer is SteamMultiplayerPeer steamPeer)
+        {
+            var peerName = steamPeer.GetSteamDisplayNameFromPeerId((int)PeerId);
+            PlayerNameLabel.Text = peerName;
+            GD.Print($"[{Multiplayer.GetUniqueId()}] Setting player name for peer {PeerId} to {peerName}");
+        }
         GD.Print($"[{Multiplayer.GetUniqueId()}] Player._Ready() - PeerId: {PeerId}, Authority: {GetMultiplayerAuthority()}");
         if (!Multiplayer.IsServer())
         {
@@ -61,7 +64,7 @@ public partial class Player : CharacterBody2D
         else
         {
             ProcessMovement(_direction);
-            
+
             // Only update NetworkPosition if the player has moved significantly
             // This reduces unnecessary network traffic
             if (GlobalPosition.DistanceSquaredTo(_lastNetworkPosition) > 1.0f) // ~1 pixel threshold
