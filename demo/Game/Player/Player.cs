@@ -1,4 +1,5 @@
 using Godot;
+using Steamworks;
 using System;
 
 public partial class Player : CharacterBody2D
@@ -25,13 +26,16 @@ public partial class Player : CharacterBody2D
     public Vector2 NetworkPosition { get; set; } = Vector2.Zero;
     Vector2 _direction = Vector2.Zero;
     private Vector2 _lastNetworkPosition = Vector2.Zero;
-    
+    [Export]
+    public Label PlayerNameLabel = null!;
+    [Export]
+    public string PlayerName = "";
     public override void _Ready()
     {
         base._Ready();
         AddToGroup("Player");
+        PlayerNameLabel.Text = PlayerName;
         GD.Print($"[{Multiplayer.GetUniqueId()}] Player._Ready() - PeerId: {PeerId}, Authority: {GetMultiplayerAuthority()}");
-
         if (!Multiplayer.IsServer())
         {
             SetMultiplayerAuthority((int)PeerId);

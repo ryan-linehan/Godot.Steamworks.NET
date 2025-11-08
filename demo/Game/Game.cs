@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Steamworks.Net;
 
 public partial class Game : Node
 {
@@ -91,7 +92,13 @@ public partial class Game : Node
     {
         GD.Print($"[{Multiplayer.GetUniqueId()}] Adding player {peerId} to the game world");
         var player = PlayerScene.Instantiate<Player>();
+        if(Multiplayer.MultiplayerPeer is SteamMultiplayerPeer steamPeer)
+        {
+            var peerName = steamPeer.GetSteamDisplayNameFromPeerId((int)peerId);
+            player.PlayerName = peerName;
+        }        
         player.PeerId = peerId;
+        
         World.AddChild(player, true);
         player.SetMultiplayerAuthority((int)peerId);
     }

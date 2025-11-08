@@ -1,3 +1,7 @@
+using System;
+using Godot.Steamworks.Net.Multiplayer;
+using Steamworks;
+
 namespace Godot.Steamworks.Net;
 
 /// <summary>

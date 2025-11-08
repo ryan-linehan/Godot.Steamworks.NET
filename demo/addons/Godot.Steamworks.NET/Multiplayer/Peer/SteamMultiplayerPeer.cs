@@ -451,6 +451,31 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
         return -1;
     }
 
+    public ulong GetSteamIdFromPeerId(int peerId)
+    {
+        if (peerIdToSteamId.ContainsKey(peerId))
+        {
+            return peerIdToSteamId[peerId].SteamId;
+        }
+        return 0;
+    }
+
+    /// <summary>
+    /// Gets the Steam display name for a given peer ID.
+    /// </summary>
+    /// <param name="peerId"></param>
+    /// <returns></returns>
+    public string GetSteamDisplayNameFromPeerId(int peerId)
+    {
+        ulong steamId = GetSteamIdFromPeerId(peerId);
+        if (steamId != 0)
+        {
+            CSteamID cSteamID = new CSteamID(steamId);
+            return SteamFriends.GetFriendPersonaName(cSteamID);
+        }
+        return "";
+    }
+
     private void SetSteamIdPeer(ulong steamId, int peerId)
     {
         if (steamId == SteamUser.GetSteamID().m_SteamID)
