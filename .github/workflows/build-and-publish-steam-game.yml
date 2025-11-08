@@ -84,6 +84,13 @@ jobs:
               uses: actions/checkout@v4
               with:
                 lfs: true
+            
+            - name: Setup
+              run: |
+                  mkdir -v -p ~/.local/share/godot/export_templates/
+                  mkdir -v -p ~/.config/
+                  mv /root/.config/godot ~/.config/godot
+                  mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono
         
             - name: Mac Build
               run: |
