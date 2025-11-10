@@ -40,7 +40,7 @@ public partial class Player : CharacterBody2D
         }
         
         GD.Print($"[{Multiplayer.GetUniqueId()}] Player._Ready() - PeerId: {PeerId}, Authority: {GetMultiplayerAuthority()}");
-        if (!Multiplayer.IsServer())
+        if (PeerId == Multiplayer.GetUniqueId())
         {
             SetMultiplayerAuthority((int)PeerId);
         }

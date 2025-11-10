@@ -1,9 +1,7 @@
 # Sourced from: https://github.com/abarichello/godot-ci/blob/master/.github/workflows/godot-ci.yml
 name: "Build and Publish Steam Game"
 on:
-    push:
-        branches: [main]
-    workflow_dispatch:
+  workflow_dispatch:
 
 # NOTE: If your `project.godot` is at the repository root, set `PROJECT_PATH` below to ".".
 env:
