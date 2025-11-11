@@ -7,6 +7,7 @@ namespace Godot.Steamworks.Net;
 /// <summary>
 /// Singleton class for Godot Steamworks.NET plugin for editor and runtime integration
 /// </summary>
+[Tool]
 public partial class GodotSteamworks : Node
 {
     /// <summary>
@@ -21,6 +22,7 @@ public partial class GodotSteamworks : Node
     /// Singleton instance of SteamworksLobby.
     /// </summary>
     public static SteamworksLobby Lobby { get; private set; } = new SteamworksLobby();
+    public static SteamworksAchievements Achievements { get; private set; } = new SteamworksAchievements();
     /// <summary>
     /// Whether Steamworks has been successfully initialized or not
     /// </summary>
@@ -38,13 +40,17 @@ public partial class GodotSteamworks : Node
     {
         base._EnterTree();
         Instance = this;
-        InitGodotSteamworks();
+        if(!Engine.IsEditorHint())
+            InitGodotSteamworks();
     }
 
     public void InitGodotSteamworks()
     {
         try
         {
+            if (IsInitialized)
+                return;
+
             GodotSteamworksLogger.LogDebug("Steam is running: " + SteamAPI.IsSteamRunning());
             if (SteamAPI.Init())
             {
@@ -69,6 +75,15 @@ public partial class GodotSteamworks : Node
             IsInitialized = false;
         }
     }
+
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+        if (!IsInitialized)
+            return;
+        SteamAPI.Shutdown();
+    }
+
 
     /// <summary>
     /// Parses command line arguments for Steam integration

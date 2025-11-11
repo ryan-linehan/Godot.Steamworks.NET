@@ -8,7 +8,9 @@ using Godot.Steamworks.Net.Util;
 namespace Godot.Steamworks.Net.Multiplayer;
 
 
-
+/// <summary>
+/// Class for managing Steamworks lobbies
+/// </summary>
 public partial class SteamworksLobby : Godot.RefCounted
 {
     /// <summary>

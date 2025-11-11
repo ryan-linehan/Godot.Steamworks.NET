@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=3 uid="uid://crbt8qe7g5xlr"]
+
+[ext_resource type="Script" uid="uid://i5jksv83qdin" path="res://addons/Godot.Steamworks.NET/Editor/SteamPanel.cs" id="1_inbdc"]
+[ext_resource type="Script" uid="uid://8x2f5d7bfwqe" path="res://addons/Godot.Steamworks.NET/Editor/SettingsTab.cs" id="2_5mphy"]
+[ext_resource type="PackedScene" uid="uid://d2c3tlh134p5o" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/Achivements.tscn" id="3_inbdc"]
+
+[node name="Steam" type="TabContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+current_tab = 1
+script = ExtResource("1_inbdc")
+
+[node name="Settings" type="MarginContainer" parent="."]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+script = ExtResource("2_5mphy")
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Settings"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Settings/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Settings/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="SettingsItem" type="VBoxContainer" parent="Settings/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Achivements" parent="." instance=ExtResource("3_inbdc")]
+layout_mode = 2

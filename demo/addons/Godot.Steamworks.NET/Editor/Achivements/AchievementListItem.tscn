@@ -1,0 +1,64 @@
+[gd_scene load_steps=4 format=3 uid="uid://m2r65wscpp5v"]
+
+[ext_resource type="Script" uid="uid://cstxhk6y5fc3o" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/AchievementListItem.cs" id="1_8y7r5"]
+[ext_resource type="Texture2D" uid="uid://dmg4plmvvkvxo" path="res://addons/Godot.Steamworks.NET/Editor/_assets/green_box.png" id="2_og5xf"]
+[ext_resource type="Texture2D" uid="uid://dp7wws0t4lfhq" path="res://addons/Godot.Steamworks.NET/Editor/_assets/red_box.png" id="3_3nh08"]
+
+[node name="AchievementListItem" type="VBoxContainer" node_paths=PackedStringArray("DescriptionLabel", "NameLabel", "IconTextureRect")]
+script = ExtResource("1_8y7r5")
+DescriptionLabel = NodePath("HBoxContainer/VBoxContainer/DescriptionRow/DescriptionLabel")
+NameLabel = NodePath("HBoxContainer/VBoxContainer/AchievementRow/AchievementName")
+UnlockedIcon = ExtResource("2_og5xf")
+LockedIcon = ExtResource("3_3nh08")
+IconTextureRect = NodePath("HBoxContainer/VBoxContainer/AchievementRow/TextureRect")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="UnlockedIcon" type="TextureRect" parent="HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="AchievementRow" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer/AchievementRow"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_og5xf")
+
+[node name="AchievementName" type="Label" parent="HBoxContainer/VBoxContainer/AchievementRow"]
+layout_mode = 2
+text = "Achievment Name"
+
+[node name="DescriptionRow" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SpaceControl" type="Control" parent="HBoxContainer/VBoxContainer/DescriptionRow"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+
+[node name="DescriptionLabel" type="Label" parent="HBoxContainer/VBoxContainer/DescriptionRow"]
+custom_minimum_size = Vector2(132, 0)
+layout_mode = 2
+text = "a small description"
+
+[node name="ButtonRow" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="UnlockButton" type="Button" parent="HBoxContainer/VBoxContainer/ButtonRow"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "unlock"
+
+[node name="ClearAchievementButton" type="Button" parent="HBoxContainer/VBoxContainer/ButtonRow"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+text = "clear"
