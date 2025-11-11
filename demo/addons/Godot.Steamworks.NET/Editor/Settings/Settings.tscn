@@ -1,15 +1,25 @@
-[gd_scene load_steps=4 format=3 uid="uid://boiy43gr1rpdn"]
+[gd_scene load_steps=3 format=3 uid="uid://boiy43gr1rpdn"]
 
 [ext_resource type="Script" uid="uid://8x2f5d7bfwqe" path="res://addons/Godot.Steamworks.NET/Editor/SettingsTab.cs" id="1_kdu28"]
 [ext_resource type="PackedScene" uid="uid://cvioue2udwygh" path="res://addons/Godot.Steamworks.NET/Editor/Settings/ModuleCheckBox.tscn" id="2_oy5oe"]
-[ext_resource type="PackedScene" uid="uid://d2c3tlh134p5o" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/Achievements.tscn" id="3_rtfg7"]
 
-[node name="Settings" type="MarginContainer"]
+[node name="Settings" type="MarginContainer" node_paths=PackedStringArray("_steamApiKeyLineEdit", "_steamAppIdLineEdit", "_setupWebApi", "_moduleCheckboxContainer")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 script = ExtResource("1_kdu28")
+_steamApiKeyLineEdit = NodePath("VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer/PartnerApiKeyLineEdit")
+_steamAppIdLineEdit = NodePath("VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer/AppIdLineEdit")
+_setupWebApi = NodePath("VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer/RefreshEditor")
+_moduleCheckboxContainer = NodePath("VBoxContainer/ScrollContainer/FlowContainer/VBoxContainer")
 metadata/_tab_index = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -21,6 +31,34 @@ size_flags_vertical = 3
 
 [node name="FlowContainer" type="HFlowContainer" parent="VBoxContainer/ScrollContainer"]
 layout_mode = 2
+
+[node name="MainSettings" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/FlowContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MainSettingsLabel" type="Label" parent="VBoxContainer/ScrollContainer/FlowContainer/MainSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Main"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/FlowContainer/MainSettings"]
+layout_mode = 2
+
+[node name="AppIdLineEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+placeholder_text = "Steam App ID"
+
+[node name="PartnerApiKeyLineEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+placeholder_text = "Partner API Key"
+secret = true
+
+[node name="RefreshEditor" type="Button" parent="VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer"]
+layout_mode = 2
+text = "refresh"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/FlowContainer"]
 layout_mode = 2
@@ -34,4 +72,3 @@ text = "Modules"
 
 [node name="ModuleCheckBox" parent="VBoxContainer/ScrollContainer/FlowContainer/VBoxContainer" instance=ExtResource("2_oy5oe")]
 layout_mode = 2
-ModuleTab = ExtResource("3_rtfg7")
