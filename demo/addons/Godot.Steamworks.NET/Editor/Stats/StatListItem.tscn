@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3 uid="uid://bq2g8kkm5fpwt"]
+
+[ext_resource type="Script" path="res://addons/Godot.Steamworks.NET/Editor/Stats/StatListItem.cs" id="1_statitem"]
+
+[node name="PanelContainer" type="PanelContainer" node_paths=PackedStringArray("NameLabel", "ValueLabel", "ValueSpinBox")]
+offset_right = 400.0
+offset_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_statitem")
+NameLabel = NodePath("MarginContainer/StatListItem/InfoContainer/NameLabel")
+ValueLabel = NodePath("MarginContainer/StatListItem/InfoContainer/ValueLabel")
+ValueSpinBox = NodePath("MarginContainer/StatListItem/ControlsContainer/ValueSpinBox")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="StatListItem" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="InfoContainer" type="HBoxContainer" parent="MarginContainer/StatListItem"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="MarginContainer/StatListItem/InfoContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Stat Name"
+
+[node name="ValueLabel" type="Label" parent="MarginContainer/StatListItem/InfoContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "0"
+
+[node name="ControlsContainer" type="HBoxContainer" parent="MarginContainer/StatListItem"]
+layout_mode = 2
+
+[node name="ValueSpinBox" type="SpinBox" parent="MarginContainer/StatListItem/ControlsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -999999.0
+max_value = 999999.0
+
+[node name="SetButton" type="Button" parent="MarginContainer/StatListItem/ControlsContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "set"

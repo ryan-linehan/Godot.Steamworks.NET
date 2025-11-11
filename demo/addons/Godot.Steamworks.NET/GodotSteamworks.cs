@@ -23,6 +23,7 @@ public partial class GodotSteamworks : Node
     /// </summary>
     public static SteamworksLobby Lobby { get; private set; } = new SteamworksLobby();
     public static SteamworksAchievements Achievements { get; private set; } = new SteamworksAchievements();
+    public static SteamworksStats Stats { get; private set; } = new SteamworksStats();
     /// <summary>
     /// Whether Steamworks has been successfully initialized or not
     /// </summary>

@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4rw5xm7yvk2h"]
+
+[ext_resource type="Script" path="res://addons/Godot.Steamworks.NET/Editor/Stats/StatsTab.cs" id="1_stats"]
+[ext_resource type="PackedScene" path="res://addons/Godot.Steamworks.NET/Editor/Stats/StatListItem.tscn" id="2_stats"]
+
+[node name="Stats" type="MarginContainer" node_paths=PackedStringArray("StatsContainer", "ResetAllButton", "RefreshButton")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+script = ExtResource("1_stats")
+StatListItemScene = ExtResource("2_stats")
+StatsContainer = NodePath("VBoxContainer/ScrollContainer/StatsContainer")
+ResetAllButton = NodePath("VBoxContainer/ButtonsContainer/ResetAllButton")
+RefreshButton = NodePath("VBoxContainer/ButtonsContainer/RefreshListButton")
+metadata/_tab_index = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="ResetAllButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "reset all"
+
+[node name="RefreshListButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "refresh list"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatsContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer" parent="VBoxContainer/ScrollContainer/StatsContainer" instance=ExtResource("2_stats")]
+layout_mode = 2

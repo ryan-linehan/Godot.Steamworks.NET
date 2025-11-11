@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://crbt8qe7g5xlr"]
+[gd_scene load_steps=5 format=3 uid="uid://crbt8qe7g5xlr"]
 
 [ext_resource type="Script" uid="uid://i5jksv83qdin" path="res://addons/Godot.Steamworks.NET/Editor/SteamPanel.cs" id="1_inbdc"]
 [ext_resource type="PackedScene" uid="uid://boiy43gr1rpdn" path="res://addons/Godot.Steamworks.NET/Editor/Settings/Settings.tscn" id="2_8ps13"]
 [ext_resource type="PackedScene" uid="uid://d2c3tlh134p5o" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/Achievements.tscn" id="3_inbdc"]
+[ext_resource type="PackedScene" uid="uid://c4rw5xm7yvk2h" path="res://addons/Godot.Steamworks.NET/Editor/Stats/Stats.tscn" id="4_stats"]
 
 [node name="Steam" type="TabContainer"]
 anchors_preset = 15
@@ -16,5 +17,6 @@ current_tab = 0
 script = ExtResource("1_inbdc")
 ModuleTabs = Dictionary[int, PackedScene]({
 0: ExtResource("2_8ps13"),
-1: ExtResource("3_inbdc")
+1: ExtResource("3_inbdc"),
+2: ExtResource("4_stats")
 })
