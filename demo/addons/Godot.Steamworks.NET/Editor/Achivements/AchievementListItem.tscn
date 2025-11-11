@@ -11,13 +11,13 @@ offset_bottom = 93.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_8y7r5")
-DescriptionLabel = NodePath("MarginContainer/AchievementListItem/HBoxContainer/VBoxContainer/DescriptionRow/DescriptionLabel")
-NameLabel = NodePath("MarginContainer/AchievementListItem/HBoxContainer/VBoxContainer/AchievementRow/AchievementName")
+DescriptionLabel = NodePath("MarginContainer/AchievementListItem/InfoContainer/VBoxContainer/DescriptionRow/DescriptionLabel")
+NameLabel = NodePath("MarginContainer/AchievementListItem/InfoContainer/VBoxContainer/AchievementRow/AchievementName")
 UnlockedIcon = ExtResource("2_og5xf")
 LockedIcon = ExtResource("3_3nh08")
-IconTextureRect = NodePath("MarginContainer/AchievementListItem/HBoxContainer/UnlockedIcon")
+IconTextureRect = NodePath("MarginContainer/AchievementListItem/InfoContainer/UnlockedIcon")
 NoIconAvailable = ExtResource("4_qh2v2")
-AchievedTextureRect = NodePath("MarginContainer/AchievementListItem/HBoxContainer/VBoxContainer/AchievementRow/AchievedTexture")
+AchievedTextureRect = NodePath("MarginContainer/AchievementListItem/InfoContainer/VBoxContainer/AchievementRow/AchievedTexture")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -29,10 +29,10 @@ theme_override_constants/margin_bottom = 8
 [node name="AchievementListItem" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/AchievementListItem"]
+[node name="InfoContainer" type="HBoxContainer" parent="MarginContainer/AchievementListItem"]
 layout_mode = 2
 
-[node name="UnlockedIcon" type="TextureRect" parent="MarginContainer/AchievementListItem/HBoxContainer"]
+[node name="UnlockedIcon" type="TextureRect" parent="MarginContainer/AchievementListItem/InfoContainer"]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -40,31 +40,31 @@ size_flags_vertical = 4
 texture = ExtResource("4_qh2v2")
 expand_mode = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/AchievementListItem/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/AchievementListItem/InfoContainer"]
 layout_mode = 2
 
-[node name="AchievementRow" type="HBoxContainer" parent="MarginContainer/AchievementListItem/HBoxContainer/VBoxContainer"]
+[node name="AchievementRow" type="HBoxContainer" parent="MarginContainer/AchievementListItem/InfoContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="AchievedTexture" type="TextureRect" parent="MarginContainer/AchievementListItem/HBoxContainer/VBoxContainer/AchievementRow"]
+[node name="AchievedTexture" type="TextureRect" parent="MarginContainer/AchievementListItem/InfoContainer/VBoxContainer/AchievementRow"]
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("2_og5xf")
 
-[node name="AchievementName" type="Label" parent="MarginContainer/AchievementListItem/HBoxContainer/VBoxContainer/AchievementRow"]
+[node name="AchievementName" type="Label" parent="MarginContainer/AchievementListItem/InfoContainer/VBoxContainer/AchievementRow"]
 layout_mode = 2
 text = "Achievment Name"
 
-[node name="DescriptionRow" type="HBoxContainer" parent="MarginContainer/AchievementListItem/HBoxContainer/VBoxContainer"]
+[node name="DescriptionRow" type="HBoxContainer" parent="MarginContainer/AchievementListItem/InfoContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="SpaceControl" type="Control" parent="MarginContainer/AchievementListItem/HBoxContainer/VBoxContainer/DescriptionRow"]
+[node name="SpaceControl" type="Control" parent="MarginContainer/AchievementListItem/InfoContainer/VBoxContainer/DescriptionRow"]
 custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
 
-[node name="DescriptionLabel" type="Label" parent="MarginContainer/AchievementListItem/HBoxContainer/VBoxContainer/DescriptionRow"]
+[node name="DescriptionLabel" type="Label" parent="MarginContainer/AchievementListItem/InfoContainer/VBoxContainer/DescriptionRow"]
 custom_minimum_size = Vector2(132, 0)
 layout_mode = 2
 text = "a longer description that makes more sense"
@@ -74,6 +74,7 @@ layout_mode = 2
 
 [node name="UnlockButton" type="Button" parent="MarginContainer/AchievementListItem/ButtonRow"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
@@ -81,6 +82,7 @@ text = "unlock"
 
 [node name="ClearAchievementButton" type="Button" parent="MarginContainer/AchievementListItem/ButtonRow"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 8

@@ -19,7 +19,7 @@ public partial class AchievementsTab : MarginContainer, ISteamPanelTab
     public Button RefreshButton = null!;
 
     public override void _Ready()
-    {        
+    {
         ClearAllButton.Pressed += OnClearAllButtonPressed;
         UnlockAllButton.Pressed += OnUnlockAllButtonPressed;
         RefreshButton.Pressed += Init;
@@ -64,14 +64,14 @@ public partial class AchievementsTab : MarginContainer, ISteamPanelTab
         {
             item.QueueFree();
         }
-        
+
         var achievements = GodotSteamworks.Achievements.GetAchievements();
-        foreach(var item in achievements)
+        foreach (var item in achievements)
         {
             GD.Print($"Achievement ID: {item.Key}, Unlocked: {item.Unlocked}");
             var listItem = AchievementListItemScene.Instantiate<AchievementListItem>();
             AchievementsContainer.AddChild(listItem);
-            listItem.SetAchievement(item.Key, item.Name, item.Description, item.Unlocked);
+            listItem.SetAchievement(item);
         }
     }
 

@@ -12,7 +12,7 @@ public partial class SteamworksAchievements : RefCounted
 {
     // Cache for unlocked achievement icons
     private Dictionary<string, Texture2D> _unlockedIconCache = new Dictionary<string, Texture2D>();
-    
+
     // Cache for locked achievement icons
     private Dictionary<string, Texture2D> _lockedIconCache = new Dictionary<string, Texture2D>();
 
@@ -40,7 +40,8 @@ public partial class SteamworksAchievements : RefCounted
             SteamUserStats.GetAchievement(achievementName, out achieved);
             var displayName = SteamUserStats.GetAchievementDisplayAttribute(achievementName, "name");
             var description = SteamUserStats.GetAchievementDisplayAttribute(achievementName, "desc");
-            achievements.Add(new Achievement(achievementName, achieved, displayName, description));            
+            SteamUserStats.GetAchievementProgressLimits(achievementName, out int minProgress, out int maxProgress);
+            achievements.Add(new Achievement(achievementName, achieved, displayName, description, minProgress, maxProgress));
         }
         return achievements;
     }
@@ -57,10 +58,10 @@ public partial class SteamworksAchievements : RefCounted
         // Check if the achievement is unlocked
         bool isUnlocked;
         SteamUserStats.GetAchievement(achievementKey, out isUnlocked);
-        
+
         // Select the appropriate cache based on unlock state
         var cache = isUnlocked ? _unlockedIconCache : _lockedIconCache;
-        
+
         // Check cache first
         if (cache.TryGetValue(achievementKey, out Texture2D? cachedIcon))
         {
@@ -87,7 +88,7 @@ public partial class SteamworksAchievements : RefCounted
         // Get the raw RGBA data
         int imageSize = (int)(width * height * 4); // 4 bytes per pixel (RGBA)
         byte[] imageData = new byte[imageSize];
-        
+
         if (!SteamUtils.GetImageRGBA(iconHandle, imageData, imageSize))
         {
             GodotSteamworksLogger.LogWarning($"Failed to get icon data for achievement: {achievementKey}");
@@ -96,13 +97,13 @@ public partial class SteamworksAchievements : RefCounted
 
         // Create Godot Image from raw RGBA data
         var image = Image.CreateFromData((int)width, (int)height, false, Image.Format.Rgba8, imageData);
-        
+
         // Create texture from image
         var texture = ImageTexture.CreateFromImage(image);
-        
+
         // Cache the texture in the appropriate cache
         cache[achievementKey] = texture;
-        
+
         return texture;
     }
 

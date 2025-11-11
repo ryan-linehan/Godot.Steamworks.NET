@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Steamworks.Net;
+using Godot.Steamworks.Net.Models;
 using System;
 
 [Tool]
@@ -58,14 +59,13 @@ public partial class AchievementListItem : Control
     }
 
 
-    public void SetAchievement(string achievementKey, string name, string description, bool unlocked)
+    public void SetAchievement(Achievement achievement)
     {
-        _achievementKey = achievementKey;
-        NameLabel.Text = name;
-        DescriptionLabel.Text = description;
-        isUnlocked = unlocked;
-        // TODO: Load these from steam and store into temp files
+        _achievementKey = achievement.Key;
+        NameLabel.Text = achievement.Name;
+        DescriptionLabel.Text = achievement.Description;
+        isUnlocked = achievement.Unlocked;
         IconTextureRect.Texture = GodotSteamworks.Achievements.GetAchievementIcon(_achievementKey) ?? NoIconAvailable;
-        AchievedTextureRect.Texture = unlocked ? UnlockedIcon : LockedIcon;
+        AchievedTextureRect.Texture = isUnlocked ? UnlockedIcon : LockedIcon;
     }
 }
