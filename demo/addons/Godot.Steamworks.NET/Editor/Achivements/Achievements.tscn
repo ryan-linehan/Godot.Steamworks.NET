@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://g8iyrccln3mo" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/AchievementsTab.cs" id="1_5bawc"]
 [ext_resource type="PackedScene" uid="uid://m2r65wscpp5v" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/AchievementListItem.tscn" id="2_awo6g"]
 
-[node name="Achivements" type="MarginContainer" node_paths=PackedStringArray("AchievementsVBox")]
+[node name="Achivements" type="MarginContainer" node_paths=PackedStringArray("AchievementsContainer", "ClearAllButton", "UnlockAllButton", "RefreshButton")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,7 +15,10 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 script = ExtResource("1_5bawc")
 AchievementListItemScene = ExtResource("2_awo6g")
-AchievementsVBox = NodePath("VBoxContainer/ScrollContainer/AchievementsVBox")
+AchievementsContainer = NodePath("VBoxContainer/ScrollContainer/AchievementsContainer")
+ClearAllButton = NodePath("VBoxContainer/ButtonsContainer/ClearAllButton")
+UnlockAllButton = NodePath("VBoxContainer/ButtonsContainer/UnlockAllButton")
+RefreshButton = NodePath("VBoxContainer/ButtonsContainer/RefreshListButton")
 metadata/_tab_index = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -45,9 +48,10 @@ text = "refresh list"
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="AchievementsVBox" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+[node name="AchievementsContainer" type="HFlowContainer" parent="VBoxContainer/ScrollContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="AchievementListItem" parent="VBoxContainer/ScrollContainer/AchievementsVBox" instance=ExtResource("2_awo6g")]
+[node name="PanelContainer" parent="VBoxContainer/ScrollContainer/AchievementsContainer" instance=ExtResource("2_awo6g")]
 layout_mode = 2

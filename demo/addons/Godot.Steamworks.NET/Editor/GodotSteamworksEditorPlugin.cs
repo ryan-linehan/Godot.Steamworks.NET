@@ -11,18 +11,20 @@ namespace Godot.Steamworks.Net;
 [Tool]
 public partial class GodotSteamworksEditorPlugin : EditorPlugin
 {
+	public static GodotSteamworksEditorPlugin Instance { get; private set; } = null!;
 	public const string GodotSteamworksEditorName = "GodotSteamworksEditor";
 	public string SteamPanelScenePath = "res://addons/Godot.Steamworks.NET/Editor/SteamPanel.tscn";
-	Control steamPanel = null!;
+	public SteamPanel SteamPanel { get; private set; } = null!;
 	public override void _EnablePlugin()
 	{
 		base._EnablePlugin();
 		GD.Print("Entering GodotSteamworksEditorPlugin");
 	}
 
-    public override void _EnterTree()
-    {
+	public override void _EnterTree()
+	{
 		base._EnterTree();
+		Instance = this;
 		// Initialize Steamworks if the instance is ready
 		if (GodotSteamworks.Instance != null && !GodotSteamworks.Instance.IsInitialized)
 		{
@@ -31,20 +33,14 @@ public partial class GodotSteamworksEditorPlugin : EditorPlugin
 		}
 
 		// Add the Steam panel to the editor's main screen
-		steamPanel = GD.Load<PackedScene>(SteamPanelScenePath).Instantiate<Control>();
-		EditorInterface.Singleton.GetEditorMainScreen().AddChild(steamPanel);
+		SteamPanel = GD.Load<PackedScene>(SteamPanelScenePath).Instantiate<SteamPanel>();
+		EditorInterface.Singleton.GetEditorMainScreen().AddChild(SteamPanel);
 		_MakeVisible(false);
-    }
+	}
 
-
-
-	public override void _DisablePlugin()
+	public void Cleanup()
 	{
-		GD.Print("Exiting GodotSteamworksEditorPlugin");
-		if (steamPanel != null)
-		{
-			steamPanel.QueueFree();
-		}
+		SteamPanel?.CallDeferred(SteamPanel.MethodName.QueueFree);
 	}
 
 	public override bool _HasMainScreen()
@@ -54,9 +50,9 @@ public partial class GodotSteamworksEditorPlugin : EditorPlugin
 
 	public override void _MakeVisible(bool visible)
 	{
-		if (steamPanel != null)
+		if (SteamPanel != null)
 		{
-			steamPanel.Visible = visible;
+			SteamPanel.Visible = visible;
 		}
 	}
 

@@ -16,31 +16,30 @@ public partial class GodotSteamworksPlugin : EditorPlugin
 	public override void _EnablePlugin()
 	{
 		GD.Print("Enabling GodotSteamworksPlugin");
-		
+
 	}
 
 	public override void _DisablePlugin()
 	{
-		GD.Print("Disabling GodotSteamworksPlugin");		
+		GD.Print("Disabling GodotSteamworksPlugin");
 	}
 
 	public override void _EnterTree()
 	{
-		base._EnterTree();
 		// Register the main runtime singleton
 		AddAutoloadSingleton(GodotSteamworksAutoloadName, "res://addons/Godot.Steamworks.NET/GodotSteamworks.cs");
-
 		// Enable the editor sub-plugin
 		GD.Print("Enabling GodotSteamworks.NET.Editor sub-plugin");
 		EditorInterface.Singleton.SetPluginEnabled("res://addons/Godot.Steamworks.NET/Editor/plugin.cfg", true);
+		base._EnterTree();
 	}
 
-    public override void _ExitTree()
-    {
-		base._ExitTree();
+	public override void _ExitTree()
+	{
+		GodotSteamworksEditorPlugin.Instance?.Cleanup();
 		RemoveAutoloadSingleton(GodotSteamworksAutoloadName);
-		EditorInterface.Singleton.SetPluginEnabled("res://addons/Godot.Steamworks.NET/Editor/plugin.cfg", false);
-    }
+		base._ExitTree();
+	}
 
 
 }

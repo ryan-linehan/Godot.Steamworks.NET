@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://cvioue2udwygh"]
+
+[ext_resource type="Script" uid="uid://ceegtqihhw5te" path="res://addons/Godot.Steamworks.NET/Editor/Settings/ModuleCheckBox.cs" id="1_c3qgq"]
+
+[node name="ModuleCheckBox" type="HBoxContainer"]
+script = ExtResource("1_c3qgq")
+
+[node name="CheckButton" type="CheckButton" parent="."]
+layout_mode = 2
+button_pressed = true
+
+[node name="ModuleLabel" type="Label" parent="."]
+layout_mode = 2
+text = "Achievements"
