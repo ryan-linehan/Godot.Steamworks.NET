@@ -37,6 +37,7 @@ public partial class AchievementListItem : Control
         GodotSteamworks.Achievements.ClearAchievement(_achievementKey);
         isUnlocked = GodotSteamworks.Achievements.IsAchievementUnlocked(_achievementKey);
         AchievedTextureRect.Texture = isUnlocked ? UnlockedIcon : LockedIcon;
+        IconTextureRect.Texture = GodotSteamworks.Achievements.GetAchievementIcon(_achievementKey) ?? NoIconAvailable;
     }
 
     public override void _ExitTree()
@@ -53,6 +54,7 @@ public partial class AchievementListItem : Control
         GodotSteamworks.Achievements.UnlockAchievement(_achievementKey);
         isUnlocked = GodotSteamworks.Achievements.IsAchievementUnlocked(_achievementKey);
         AchievedTextureRect.Texture = isUnlocked ? UnlockedIcon : LockedIcon;
+        IconTextureRect.Texture = GodotSteamworks.Achievements.GetAchievementIcon(_achievementKey) ?? NoIconAvailable;
     }
 
 
@@ -63,7 +65,7 @@ public partial class AchievementListItem : Control
         DescriptionLabel.Text = description;
         isUnlocked = unlocked;
         // TODO: Load these from steam and store into temp files
-        IconTextureRect.Texture = NoIconAvailable;
+        IconTextureRect.Texture = GodotSteamworks.Achievements.GetAchievementIcon(_achievementKey) ?? NoIconAvailable;
         AchievedTextureRect.Texture = unlocked ? UnlockedIcon : LockedIcon;
     }
 }

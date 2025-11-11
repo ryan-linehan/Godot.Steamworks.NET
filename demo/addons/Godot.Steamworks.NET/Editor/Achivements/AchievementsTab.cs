@@ -18,13 +18,14 @@ public partial class AchievementsTab : MarginContainer, ISteamPanelTab
     [Export]
     public Button RefreshButton = null!;
 
-    public override void _EnterTree()
+    public override void _Ready()
     {        
         ClearAllButton.Pressed += OnClearAllButtonPressed;
         UnlockAllButton.Pressed += OnUnlockAllButtonPressed;
         RefreshButton.Pressed += Init;
-        base._EnterTree();
+        base._Ready();
     }
+
 
     public override void _ExitTree()
     {
