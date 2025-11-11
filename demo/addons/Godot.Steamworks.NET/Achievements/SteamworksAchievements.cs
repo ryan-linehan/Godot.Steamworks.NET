@@ -10,6 +10,12 @@ namespace Godot.Steamworks.Net;
 /// </summary>
 public partial class SteamworksAchievements : RefCounted
 {
+    // Cache for unlocked achievement icons
+    private Dictionary<string, Texture2D> _unlockedIconCache = new Dictionary<string, Texture2D>();
+    
+    // Cache for locked achievement icons
+    private Dictionary<string, Texture2D> _lockedIconCache = new Dictionary<string, Texture2D>();
+
     public void Init()
     {
         // SteamUserStats.RequestCurrentStats(); // is what the docs say, but I dont see a call for it? Might be deprecated now
@@ -39,6 +45,66 @@ public partial class SteamworksAchievements : RefCounted
         return achievements;
     }
 
+    /// <summary>
+    /// Gets the icon for the specified achievement as a Godot Texture2D.
+    /// Returns the unlocked icon if the achievement is unlocked, or the locked icon if locked.
+    /// Icons are cached in memory to avoid repeated retrieval and conversion.
+    /// </summary>
+    /// <param name="achievementKey">The achievement identifier</param>
+    /// <returns>Texture2D of the achievement icon, or null if not available</returns>
+    public Texture2D? GetAchievementIcon(string achievementKey)
+    {
+        // Check if the achievement is unlocked
+        bool isUnlocked;
+        SteamUserStats.GetAchievement(achievementKey, out isUnlocked);
+        
+        // Select the appropriate cache based on unlock state
+        var cache = isUnlocked ? _unlockedIconCache : _lockedIconCache;
+        
+        // Check cache first
+        if (cache.TryGetValue(achievementKey, out Texture2D? cachedIcon))
+        {
+            return cachedIcon;
+        }
+
+        // Get the icon handle from Steam
+        // Note: Steam returns the unlocked icon when achievement is locked, and vice versa
+        int iconHandle = SteamUserStats.GetAchievementIcon(achievementKey);
+        if (iconHandle == 0)
+        {
+            GodotSteamworksLogger.LogWarning($"No icon found for achievement: {achievementKey}");
+            return null;
+        }
+
+        // Get icon dimensions
+        uint width, height;
+        if (!SteamUtils.GetImageSize(iconHandle, out width, out height))
+        {
+            GodotSteamworksLogger.LogWarning($"Failed to get icon size for achievement: {achievementKey}");
+            return null;
+        }
+
+        // Get the raw RGBA data
+        int imageSize = (int)(width * height * 4); // 4 bytes per pixel (RGBA)
+        byte[] imageData = new byte[imageSize];
+        
+        if (!SteamUtils.GetImageRGBA(iconHandle, imageData, imageSize))
+        {
+            GodotSteamworksLogger.LogWarning($"Failed to get icon data for achievement: {achievementKey}");
+            return null;
+        }
+
+        // Create Godot Image from raw RGBA data
+        var image = Image.CreateFromData((int)width, (int)height, false, Image.Format.Rgba8, imageData);
+        
+        // Create texture from image
+        var texture = ImageTexture.CreateFromImage(image);
+        
+        // Cache the texture in the appropriate cache
+        cache[achievementKey] = texture;
+        
+        return texture;
+    }
 
 
     /// <summary>
