@@ -27,7 +27,12 @@ public partial class GodotSteamworksEditorPlugin : EditorPlugin
 	{
 		base._EnterTree();
 		Instance = this;
-
+		// Initialize Steamworks if the instance is ready
+		if (GodotSteamworks.Instance != null && !GodotSteamworks.Instance.IsInitialized)
+		{
+			GD.Print("Initializing GodotSteamworks from EditorPlugin");
+			GodotSteamworks.Instance.InitGodotSteamworks();
+		}
 		// Add the Steam panel to the editor's main screen
 		SteamPanel = GD.Load<PackedScene>(SteamPanelScenePath).Instantiate<SteamPanel>();
 		EditorInterface.Singleton.GetEditorMainScreen().AddChild(SteamPanel);

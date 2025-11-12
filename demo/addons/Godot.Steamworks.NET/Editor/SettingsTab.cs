@@ -66,10 +66,10 @@ public partial class SettingsTab : MarginContainer, ISteamPanelTab
             return;
         }
 
-        await ValidateAndSaveAsync(appId, apiKey, showRestartDialog: true);
+        await ValidateAndSaveAsync(appId, apiKey);
     }
 
-    private async System.Threading.Tasks.Task ValidateAndSaveAsync(string appId, string apiKey, bool showRestartDialog = false)
+    private async System.Threading.Tasks.Task ValidateAndSaveAsync(string appId, string apiKey)
     {
         try
         {
@@ -97,10 +97,6 @@ public partial class SettingsTab : MarginContainer, ISteamPanelTab
                     _isValidated = true;
                     _buttonPressedOnce = true;
                     EnableAllModules();
-                    if (showRestartDialog)
-                    {
-                        ShowRestartEditorDialog();
-                    }
                 }
                 else
                 {
@@ -155,29 +151,5 @@ public partial class SettingsTab : MarginContainer, ISteamPanelTab
             // Auto-validate the loaded config
             await ValidateAndSaveAsync(appId, apiKey);
         }
-    }
-
-    private void ShowRestartEditorDialog()
-    {
-        var confirmationDialog = new ConfirmationDialog
-        {
-            DialogText = "Steam API credentials validated successfully. Please restart the editor for changes to take effect.",
-            Title = "Editor Restart Required"
-        };
-        confirmationDialog.Confirmed += OnRestartConfirmed;
-        confirmationDialog.Canceled += OnRestartCanceled;
-        AddChild(confirmationDialog);
-        confirmationDialog.PopupCentered();
-    }
-
-    private void OnRestartConfirmed()
-    {
-        EditorInterface.Singleton.RestartEditor();
-    }
-
-    private static void OnRestartCanceled()
-    {
-        // User chose not to restart - they can do it manually later
-        GD.Print("Editor restart canceled. Please restart manually when ready.");
     }
 }
