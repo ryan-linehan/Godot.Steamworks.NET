@@ -11,32 +11,28 @@ public static class SteamConfigManager
     private const string ConfigDirPath = "user://godot.steamworks.net";
     private const string ConfigFilePath = "user://godot.steamworks.net/config.cfg";
     private const string SectionName = "steam_api";
-    private const string AppIdKey = "app_id";
     private const string ApiKeyKey = "api_key";
 
     /// <summary>
-    /// Loads the Steam API configuration from file
+    /// Loads the Steam API key from config file
     /// </summary>
-    public static (string appId, string apiKey) LoadConfig()
+    public static string LoadApiKey()
     {
         var configFile = new ConfigFile();
         var error = configFile.Load(ConfigFilePath);
 
         if (error != Error.Ok)
         {
-            return ("", "");
+            return "";
         }
 
-        var appId = configFile.GetValue(SectionName, AppIdKey, "").AsString();
-        var apiKey = configFile.GetValue(SectionName, ApiKeyKey, "").AsString();
-
-        return (appId, apiKey);
+        return configFile.GetValue(SectionName, ApiKeyKey, "").AsString();
     }
 
     /// <summary>
-    /// Saves the Steam API configuration to file
+    /// Saves the Steam API key to config file
     /// </summary>
-    public static Error SaveConfig(string appId, string apiKey)
+    public static Error SaveApiKey(string apiKey)
     {
         var configFile = new ConfigFile();
 
@@ -52,7 +48,6 @@ public static class SteamConfigManager
             }
         }
 
-        configFile.SetValue(SectionName, AppIdKey, appId);
         configFile.SetValue(SectionName, ApiKeyKey, apiKey);
 
         var saveError = configFile.Save(ConfigFilePath);
@@ -62,7 +57,7 @@ public static class SteamConfigManager
             return saveError;
         }
 
-        GD.Print($"Steam config saved successfully");
+        GD.Print($"Steam API key saved successfully");
         return Error.Ok;
     }
 
@@ -71,7 +66,7 @@ public static class SteamConfigManager
     /// </summary>
     public static bool HasValidConfig()
     {
-        var (appId, apiKey) = LoadConfig();
-        return !string.IsNullOrWhiteSpace(appId) && !string.IsNullOrWhiteSpace(apiKey);
+        var apiKey = LoadApiKey();
+        return !string.IsNullOrWhiteSpace(apiKey);
     }
 }

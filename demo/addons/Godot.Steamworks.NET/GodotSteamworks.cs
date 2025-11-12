@@ -7,7 +7,6 @@ namespace Godot.Steamworks.Net;
 /// <summary>
 /// Singleton class for Godot Steamworks.NET plugin for editor and runtime integration
 /// </summary>
-[Tool]
 public partial class GodotSteamworks : Node
 {
     /// <summary>
@@ -40,8 +39,7 @@ public partial class GodotSteamworks : Node
     {
         base._EnterTree();
         Instance = this;
-        if(!Engine.IsEditorHint())
-            InitGodotSteamworks();
+        InitGodotSteamworks();
     }
 
     public void InitGodotSteamworks()

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://8x2f5d7bfwqe" path="res://addons/Godot.Steamworks.NET/Editor/SettingsTab.cs" id="1_kdu28"]
 [ext_resource type="PackedScene" uid="uid://cvioue2udwygh" path="res://addons/Godot.Steamworks.NET/Editor/Settings/ModuleCheckBox.tscn" id="2_oy5oe"]
 
-[node name="Settings" type="MarginContainer" node_paths=PackedStringArray("_steamApiKeyLineEdit", "_steamAppIdLineEdit", "_setupWebApi", "_moduleCheckboxContainer")]
+[node name="Settings" type="MarginContainer" node_paths=PackedStringArray("_steamApiKeyLineEdit", "_steamAppIdLabel", "_setupWebApi", "_moduleCheckboxContainer", "_initializeEditorButton")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,9 +17,10 @@ theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 script = ExtResource("1_kdu28")
 _steamApiKeyLineEdit = NodePath("VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer/PartnerApiKeyLineEdit")
-_steamAppIdLineEdit = NodePath("VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer/AppIdLineEdit")
+_steamAppIdLabel = NodePath("VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer/AppIdLineEdit")
 _setupWebApi = NodePath("VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer/RefreshEditor")
 _moduleCheckboxContainer = NodePath("VBoxContainer/ScrollContainer/FlowContainer/VBoxContainer")
+_initializeEditorButton = NodePath("VBoxContainer/ScrollContainer/FlowContainer/MainSettings/InitializeEditorButton")
 metadata/_tab_index = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -42,13 +43,18 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Main"
 
+[node name="InitializeEditorButton" type="Button" parent="VBoxContainer/ScrollContainer/FlowContainer/MainSettings"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Initialize Editor"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/FlowContainer/MainSettings"]
 layout_mode = 2
 
-[node name="AppIdLineEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer"]
+[node name="AppIdLineEdit" type="Label" parent="VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer"]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
-placeholder_text = "Steam App ID"
+text = "App Id:"
 
 [node name="PartnerApiKeyLineEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/FlowContainer/MainSettings/HBoxContainer"]
 custom_minimum_size = Vector2(256, 0)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using SteamWebAPI2.Interfaces;
 using Godot.Steamworks.Net.Utils;
+using Steamworks;
 
 namespace Godot.Steamworks.Net;
 
@@ -12,33 +13,54 @@ public partial class SettingsTab : MarginContainer, ISteamPanelTab
     [Export]
     private LineEdit _steamApiKeyLineEdit = null!;
     [Export]
-    private LineEdit _steamAppIdLineEdit = null!;
+    private Label _steamAppIdLabel = null!;
     [Export]
     private Button _setupWebApi = null!;
     [Export]
     private Control _moduleCheckboxContainer = null!;
+    [Export]
+    private Button _initializeEditorButton = null!;
 
     private List<ModuleCheckBox> _moduleCheckBoxes = new();
     private bool _isValidated = false;
     private bool _buttonPressedOnce = false;
-    
+
     public override void _Ready()
     {
-        base._Ready();        
+        base._Ready();
         _setupWebApi.Pressed += OnSetupWebApiPressed;
-
-
+        _initializeEditorButton.Pressed += InitializeEditorIntegration;
         // Find all module checkboxes in the parent panel
         FindModuleCheckBoxes();
-
-        // Start with modules disabled until validation
         DisableAllModules();
+    }
+
+    private async void InitializeEditorIntegration()
+    {
+        // GodotSteamworks.Instance.InitGodotSteamworks();
+        SteamAPI.Init();
+        if (!string.IsNullOrEmpty(_steamApiKeyLineEdit.Text))
+            OnSetupWebApiPressed();
+        // Init is called when the tab is selected
+        // Check if we have saved config and load it
+        if (SteamConfigManager.HasValidConfig() && !_isValidated)
+        {
+            var appId = SteamUtils.GetAppID().ToString();
+            var apiKey = SteamConfigManager.LoadApiKey();
+            _steamAppIdLabel.Text = appId;
+            _steamApiKeyLineEdit.Text = apiKey;
+
+            // Auto-validate the loaded config
+            await ValidateAndSaveAsync(appId, apiKey);
+        }
+        EnableAllModules();
     }
 
     public override void _ExitTree()
     {
         base._ExitTree();
         _setupWebApi.Pressed -= OnSetupWebApiPressed;
+        _initializeEditorButton.Pressed -= InitializeEditorIntegration;
     }
 
     private void FindModuleCheckBoxes()
@@ -56,17 +78,23 @@ public partial class SettingsTab : MarginContainer, ISteamPanelTab
 
     private async void OnSetupWebApiPressed()
     {
-        var appId = _steamAppIdLineEdit.Text.Trim();
         var apiKey = _steamApiKeyLineEdit.Text.Trim();
 
-        if (string.IsNullOrWhiteSpace(appId) || string.IsNullOrWhiteSpace(apiKey))
+        if (!GodotSteamworks.Instance.IsInitialized)
         {
-            GD.PrintErr("App ID and API Key are required");
+            GD.PrintErr("App ID not found in steam_appid.txt");
             DisableAllModules();
             return;
         }
 
-        await ValidateAndSaveAsync(appId, apiKey);
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            GD.PrintErr("API Key is required");
+            DisableAllModules();
+            return;
+        }
+
+        await ValidateAndSaveAsync(SteamUtils.GetAppID().ToString(), apiKey);
     }
 
     private async System.Threading.Tasks.Task ValidateAndSaveAsync(string appId, string apiKey)
@@ -83,15 +111,15 @@ public partial class SettingsTab : MarginContainer, ISteamPanelTab
 
             // Get the static factory with the API key
             var webInterfaceFactory = GodotSteamworksEditorPlugin.GetSteamWebInterfaceFactory(apiKey);
-            var steamUserInterface = webInterfaceFactory.CreateSteamWebInterface<SteamUserStats>();
-            var gameStats = await steamUserInterface.GetSchemaForGameAsync(appIdUint);
+            var steamUserInterface = webInterfaceFactory.CreateSteamWebInterface<SteamWebAPI2.Interfaces.SteamUserStats>();
+            var gameStats = await steamUserInterface.GetSchemaForGameAsync(SteamUtils.GetAppID().m_AppId);
 
             if (gameStats?.Data != null)
             {
                 GD.Print("Valid Steam API credentials. Game: " + gameStats.Data.GameName);
 
                 // Save to config
-                var saveError = SteamConfigManager.SaveConfig(appId, apiKey);
+                var saveError = SteamConfigManager.SaveApiKey(apiKey);
                 if (saveError == Error.Ok)
                 {
                     _isValidated = true;
@@ -140,16 +168,5 @@ public partial class SettingsTab : MarginContainer, ISteamPanelTab
 
     public async void Init()
     {
-        // Init is called when the tab is selected
-        // Check if we have saved config and load it
-        if (SteamConfigManager.HasValidConfig() && !_isValidated)
-        {
-            var (appId, apiKey) = SteamConfigManager.LoadConfig();
-            _steamAppIdLineEdit.Text = appId;
-            _steamApiKeyLineEdit.Text = apiKey;
-
-            // Auto-validate the loaded config
-            await ValidateAndSaveAsync(appId, apiKey);
-        }
     }
 }

@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <!-- Only include SteamWebAPI2 when not exporting (editor only) -->
+    <PackageReference Include="SteamWebAPI2" Version="4.4.1" Condition="'$(Configuration)' != 'ExportRelease' And '$(Configuration)' != 'ExportDebug'" />
     <PackageReference Include="Steamworks.NET.AnyCPU" Version="2025.162.6-anycpu021" />
   </ItemGroup>
 </Project>
