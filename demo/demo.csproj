@@ -6,6 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Steamworks.NET.AnyCPU" Version="2025.162.6-anycpu021" />
+    <PackageReference Include="Steamworks.NET.AnyCPU" Version="2025.162.6-b-socket.1" />
   </ItemGroup>
 </Project>

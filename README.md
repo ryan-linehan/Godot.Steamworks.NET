@@ -24,49 +24,74 @@ Rather than dealing with the complexities of Steamworks.NET directly, this wrapp
 ## 🚧 In Development / Planned
 
 - **Achievement System** - Simplify achievement management for steam
+- **Cloud Saves** - Simplify save files with multiple steam users on the same pc
 
 ### Prerequisites
 
 - **Godot 4.4+** with **.NET/C# support**
-- **Steamworks.NET.AnyCPU** package (included via local NuGet configuration)
+- **Steamworks.NET.AnyCPU** package
 
 ## 📦 Installation
 
-This project uses local NuGet package references for Steamworks.NET.AnyCPU. The demo project demonstrates how to integrate the wrapper into your Godot C# game.
+### 1. Install the Steamworks.NET.AnyCPU Package
 
-> Currently the Steamworks.NET.AnyCPU is still being developed but this repository uses a version that is still a work in progress. See <https://github.com/Akarinnnnn/Steamworks.NET.AnyCPU/pull/9> for the branch we are using. We will use this until a new package is pushed with these fixes
+Install the Steamworks.NET.AnyCPU package using the dotnet CLI:
 
-1. Clone this repository and copy the `libs/` directory to the root of your project
-2. Ensure you have a `NuGet.config` file in the root of your project. If you do not, create one.
-3. Add the following to your `NuGet.config`:
+```bash
+dotnet add package Steamworks.NET.AnyCPU
+```
 
-    ```xml
-    <?xml version="1.0" encoding="utf-8"?>
-    <configuration>
-    <packageSources>
-        <add key="local" value="./libs" />
-        <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
-    </packageSources>
-    </configuration>
-    ```
+Or add it directly to your `.csproj` file:
 
-4. Finally the following to your `.csproj` file to reference the local NuGet package:
+```xml
+<ItemGroup>
+  <PackageReference Include="Steamworks.NET.AnyCPU" Version="2025.162.6-b-socket.1" />
+</ItemGroup>
+```
 
-   ```xml
-   <ItemGroup>
-       <PackageReference Include="Steamworks.NET.AnyCPU" Version="2025.162.6-anycpu021" />
-   </ItemGroup>
-   ```
+> **Note:** The Steamworks.NET.AnyCPU package is still under active development and may not be fully production-ready. That said, it's been working reliably in our testing. Please report any issues!
 
-> Once the Steamworks.NET.AnyCPU package is updated on nuget.org you will simply be able to edit your csproj to add the package reference. This README's instructions will be updated to reflect the change once it is updated
+### 2. Add the Godot.Steamworks.NET Plugin
 
+Copy the `addons/Godot.Steamworks.NET/` folder from the demo project into your Godot project's `addons/` directory. Build your project first, then enable the plugin in your project settings under **Project > Project Settings > Plugins**.
+
+## 🎮 Usage
+
+### Accessing the Singleton
+
+The `GodotSteamworks` class provides a singleton instance for accessing Steam functionality throughout your game:
+
+```csharp
+using Godot.Steamworks.Net;
+
+// Check if Steam is initialized
+if (GodotSteamworks.Instance.IsInitialized)
+{
+    GD.Print("Steam is ready!");
+}
+
+// Access lobby functionality
+GodotSteamworks.Lobby.CreateLobby(/* ... */);
+```
+
+### Accessing the Full Steamworks.NET API
+
+If the wrapper doesn't provide functionality you need, you can access the full Steamworks.NET library directly:
+
+```csharp
+using Steamworks;
+
+// Use any Steamworks.NET API directly
+var playerName = SteamFriends.GetPersonaName();
+var appId = SteamUtils.GetAppID();
+```
+
+For more examples, like setting up peer to peer check out the demo project in the `demo/` folder.
 
 ## 🏗️ Project Structure
 
 - `demo/` - Example Godot project demonstrating the wrapper's features
 - `demo/addons/Godot.Steamworks.NET/` - The core wrapper plugin
-- `libs/` - Local NuGet packages for Steamworks.NET.AnyCPU
-- `NuGet.config` - NuGet configuration pointing to local packages
 - `.github/workflows/` - Example CI/CD pipeline for building and deploying Steam games
 
 ## 📄 License
