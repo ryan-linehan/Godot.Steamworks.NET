@@ -356,7 +356,7 @@ public partial class SteamworksLobby : Godot.RefCounted
     }
 
     /// <summary>
-    /// Joins the specified lobby emits <LobbyJoined> signal when complete
+    /// Joins the specified lobby emits <see cref="LobbyJoined"/> signal when complete
     /// </summary>
     /// <param name="lobbyId">The lobby ID to join</param>
     public void JoinLobby(CSteamID lobbyId)
