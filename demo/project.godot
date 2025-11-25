@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="here_for_the_signal"
+config/name="demo"
 run/main_scene="uid://np4lwfg2b7vl"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"

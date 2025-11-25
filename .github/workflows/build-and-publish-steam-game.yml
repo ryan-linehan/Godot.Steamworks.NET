@@ -6,7 +6,7 @@ on:
 # NOTE: If your `project.godot` is at the repository root, set `PROJECT_PATH` below to ".".
 env:
     GODOT_VERSION: 4.5.1
-    EXPORT_NAME: here_for_the_signal
+    EXPORT_NAME: demo
     PROJECT_PATH: demo
 
 jobs:
