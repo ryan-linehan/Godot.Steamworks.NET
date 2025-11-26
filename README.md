@@ -18,15 +18,15 @@ Rather than dealing with the complexities of Steamworks.NET directly, this wrapp
 
 - **Steam Initialization** - Simplified Steam API setup with Godot lifecycle integration
 - **P2P Networking** - Steam's networking capabilities wrapped for Godot's networking APIs
+- **Achievements API** - Unlock, reset, and query Steam achievements easily from Godot C# scripts
 - **CI/CD Pipeline** - Example GitHub Actions workflow for building and deploying Steam games
 - **Multiplayer Demo Project** - A demo project with an example of how to connect to steam lobbies and have peers connect to the same game through steam P2P
 
 ## 🚧 In Development / Planned
 
-- **Achievement System** - Simplify achievement management for steam
-- **Cloud Saves** - Simplify save files with multiple steam users on the same pc
+- **Cloud Saves** - Simplify save files with multiple steam users on the same PC
 
-### Prerequisites
+## 📋 Prerequisites
 
 - **Godot 4.4+** with **.NET/C# support**
 - **Steamworks.NET.AnyCPU** package
@@ -74,9 +74,21 @@ if (GodotSteamworks.Instance.IsInitialized)
 GodotSteamworks.Lobby.CreateLobby(/* ... */);
 ```
 
+## 🏆 Achievements API
+
+Easily integrate Steam achievements into your Godot C# game. Unlock, reset, and check achievement status with simple method calls.
+
+```
+GodotSteamworks.Instance.Achievements.Unlock("FIRST_WIN");
+```
+
+> Instantiate the debug panel to quickly reset achievements for testing.
+
+See the full documentation: [docs/achievements.md](docs/achievements.md)
+
 ### Accessing the Full Steamworks.NET API
 
-If the wrapper doesn't provide functionality you need, you can access the full Steamworks.NET library directly:
+If the wrapper doesn't provide functionality you need, you can access the full Steamworks.NET library directly through the nuget package:
 
 ```csharp
 using Steamworks;
@@ -86,19 +98,36 @@ var playerName = SteamFriends.GetPersonaName();
 var appId = SteamUtils.GetAppID();
 ```
 
-For more examples, like setting up peer to peer check out the demo project in the `demo/` folder.
+For more examples, like setting up peer-to-peer, check out the demo project in the `demo/` folder.
+
+> If you can find it on Steam's [API reference](https://partner.steamgames.com/doc/api), you can likely use it with the Steamworks.NET API
 
 ## 🏗️ Project Structure
 
 - `demo/` - Example Godot project demonstrating the wrapper's features
 - `demo/addons/Godot.Steamworks.NET/` - The core wrapper plugin
+- `docs/` - Detailed documentation for features like Achievements API
 - `.github/workflows/` - Example CI/CD pipeline for building and deploying Steam games
+
+## 🔗 Related Projects
+
+Other Godot C# tools I maintain and use:
+
+- 💻 **[Limbo Console C# Wrapper](https://github.com/ryan-linehan/limbo_console_sharp)** - NuGet package wrapper for the Limbo Console plugin. Excellent for debugging Steam integration during development.
+- 🎮 **[Godot Input Icons](https://github.com/ryan-linehan/godot_input_icons)** - Runtime input icon display plugin. Perfect for showing controller inputs in Steam Deck games.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License
 
 **Third-party licenses:**
 
 - [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET) - MIT License
 - Steam SDK - Valve Corporation
+
+## 💖 Support
+
+If this plugin helps your game, consider:
+
+- ⭐ Starring this repo
+- 🎮 Checking out my games on [itch.io](https://rcubdev.itch.io)

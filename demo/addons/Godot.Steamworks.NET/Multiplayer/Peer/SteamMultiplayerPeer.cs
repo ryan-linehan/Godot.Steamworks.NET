@@ -5,9 +5,11 @@ using Steamworks;
 using Godot.Collections;
 using System.Linq;
 
+namespace Godot.Steamworks.Net.Multiplayer.Peer;
+
 /// <summary>
 /// A multiplayer peer implementation for Steam networking.
-/// Based off of: Based off of: https://github.com/expressobits/steam-multiplayer-peer
+/// Based off of: https://github.com/expressobits/steam-multiplayer-peer
 /// </summary>
 public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
 {

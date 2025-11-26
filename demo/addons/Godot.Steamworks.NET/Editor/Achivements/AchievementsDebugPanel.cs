@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace Godot.Steamworks.Net;
+namespace Godot.Steamworks.Net.Editor.Achievements;
 
 
 public partial class AchievementsDebugPanel : MarginContainer

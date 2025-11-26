@@ -1,7 +1,7 @@
 using Godot;
-using Godot.Steamworks.Net;
-using Godot.Steamworks.Net.Models;
 using System;
+
+namespace Godot.Steamworks.Net.Editor.Achievements;
 
 public partial class AchievementDebugListItem : Control
 {

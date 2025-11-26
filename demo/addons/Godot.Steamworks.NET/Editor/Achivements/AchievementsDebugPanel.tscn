@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://g8iyrccln3mo" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/AchievementsDebugPanel.cs" id="1_rmb1c"]
 [ext_resource type="PackedScene" uid="uid://m2r65wscpp5v" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/AchievementDebugListItem.tscn" id="2_03g4y"]
 
-[node name="Achivements" type="MarginContainer" node_paths=PackedStringArray("AchievementsContainer", "ClearAllButton", "UnlockAllButton", "RefreshButton")]
+[node name="AchievementsDebugPanel" type="MarginContainer" node_paths=PackedStringArray("AchievementsContainer", "ClearAllButton", "UnlockAllButton", "RefreshButton")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
