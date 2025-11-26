@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://np4lwfg2b7vl"]
+[gd_scene load_steps=9 format=3 uid="uid://np4lwfg2b7vl"]
 
 [ext_resource type="PackedScene" uid="uid://del0dvsm2accj" path="res://UI/Steam/SteamLobbyMenu.tscn" id="1_glv2v"]
 [ext_resource type="Script" uid="uid://bsqk5alpxlwrs" path="res://Main.cs" id="1_r0du0"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://dag7erv1whfoi" path="res://Game/Game.tscn" id="2_uu6xs"]
 [ext_resource type="PackedScene" uid="uid://dpcpny8vdk7y7" path="res://UI/Godot/GodotConnectMenu.tscn" id="3_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://buf080ay7gwws" path="res://UI/SinglePlayer/SinglePlayerMenu.tscn" id="5_3dxm6"]
+[ext_resource type="PackedScene" uid="uid://d2c3tlh134p5o" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/AchievementsDebugPanel.tscn" id="6_lgr22"]
+[ext_resource type="Script" uid="uid://cxs2s3uf06g3r" path="res://UI/Debug/DebugPanel.cs" id="6_trn2v"]
 
 [node name="Main" type="Node" node_paths=PackedStringArray("NetworkingCanvas", "Game")]
 script = ExtResource("1_r0du0")
@@ -30,6 +32,36 @@ visible = false
 
 [node name="SinglePlayerMenu" parent="NetworkingCanvas" instance=ExtResource("5_3dxm6")]
 
+[node name="DebugButtons" type="Control" parent="NetworkingCanvas"]
+layout_mode = 3
+anchor_top = 0.897
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -88.25598
+offset_bottom = -88.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="NetworkingCanvas/DebugButtons"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AchievementsButton" type="Button" parent="NetworkingCanvas/DebugButtons/HBoxContainer"]
+layout_mode = 2
+text = "Achievements"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="NetworkingCanvas"]
 offset_left = 16.0
 offset_top = 64.0
@@ -50,5 +82,35 @@ popup/item_1/id = 1
 [node name="RefreshButton" type="Button" parent="NetworkingCanvas/HBoxContainer"]
 layout_mode = 2
 text = "refresh"
+
+[node name="DebugPanel" type="PanelContainer" parent="NetworkingCanvas" node_paths=PackedStringArray("OpenAchievements", "AchievementsDebugPanel", "CloseButton")]
+visible = false
+anchors_preset = -1
+anchor_left = 0.21000001
+anchor_top = 0.076000005
+anchor_right = 0.79800004
+anchor_bottom = 0.943
+offset_left = 0.07998657
+offset_top = -0.24800491
+offset_right = -0.2960205
+offset_bottom = -0.06402588
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("6_trn2v")
+OpenAchievements = NodePath("../DebugButtons/HBoxContainer/AchievementsButton")
+AchievementsDebugPanel = NodePath("Achivements")
+CloseButton = NodePath("Achivements/CloseButton")
+
+[node name="Achivements" parent="NetworkingCanvas/DebugPanel" instance=ExtResource("6_lgr22")]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="NetworkingCanvas/DebugPanel/Achivements"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "close"
 
 [node name="Game" parent="." instance=ExtResource("2_uu6xs")]

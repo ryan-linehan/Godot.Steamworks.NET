@@ -21,6 +21,7 @@ public partial class GodotSteamworks : Node
     /// Singleton instance of SteamworksLobby.
     /// </summary>
     public static SteamworksLobby Lobby { get; private set; } = new SteamworksLobby();
+    public static SteamworksAchievements Achievements { get; private set; } = new SteamworksAchievements();
     /// <summary>
     /// Whether Steamworks has been successfully initialized or not
     /// </summary>
@@ -45,6 +46,9 @@ public partial class GodotSteamworks : Node
     {
         try
         {
+            if (IsInitialized)
+                return;
+
             GodotSteamworksLogger.LogDebug("Steam is running: " + SteamAPI.IsSteamRunning());
             if (SteamAPI.Init())
             {
@@ -69,6 +73,15 @@ public partial class GodotSteamworks : Node
             IsInitialized = false;
         }
     }
+
+    public override void _ExitTree()
+    {
+        if (!IsInitialized)
+            return;
+        SteamAPI.Shutdown();
+        base._ExitTree();
+    }
+
 
     /// <summary>
     /// Parses command line arguments for Steam integration
