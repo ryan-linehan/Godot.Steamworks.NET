@@ -1,5 +1,4 @@
-using Godot;
-using System;
+using Godot.Steamworks.Net.Models;
 
 namespace Godot.Steamworks.Net.Editor.Achievements;
 

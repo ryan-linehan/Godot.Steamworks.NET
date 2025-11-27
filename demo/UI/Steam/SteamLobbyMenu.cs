@@ -2,6 +2,7 @@ using Godot.Steamworks.Net;
 using Godot;
 using Steamworks;
 using System;
+using Godot.Steamworks.Net.Multiplayer.Peer;
 
 /// <summary>
 /// Example menu script to create or join a Steam lobby and start p2p connection over steam

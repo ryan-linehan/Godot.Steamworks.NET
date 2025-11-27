@@ -78,7 +78,7 @@ GodotSteamworks.Lobby.CreateLobby(/* ... */);
 
 Easily integrate Steam achievements into your Godot C# game. Unlock, reset, and check achievement status with simple method calls.
 
-```
+```csharp
 GodotSteamworks.Instance.Achievements.Unlock("FIRST_WIN");
 ```
 
