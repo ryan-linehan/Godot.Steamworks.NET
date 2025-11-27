@@ -28,6 +28,8 @@ Rather than dealing with the complexities of Steamworks.NET directly, this wrapp
 ## 🚧 In Development / Planned
 
 - **Cloud Saves** - Simplify save files with multiple steam users on the same PC
+- **Game Stats** - View current player stats / test stats that are setup in steamworks for the client. Global stats dashboard.
+- **Docs** - More documentation about getting around steam and setting things up in steamworks
 
 ## 📋 Prerequisites
 
