@@ -6,6 +6,9 @@
 
 A Godot wrapper around [Steamworks.NET](https://github.com/rlabrecque/Steamworks.NET) that makes Steam integration easy and intuitive for Godot 4.4+ C# projects. Get your indie game on Steam with minimal setup and maximum functionality.
 
+| Steam Lobby ![Steam Lobby](.github/images/steam_lobby.png) | Steam Achievements![Steam Achievements Debug](.github/images/steam_achievements_debug.png) |
+|------------------------------------------------|--------------------------------------------------------------------------|
+
 ## 🎯 What is This?
 
 This project provides a Godot-friendly wrapper around Steamworks.NET, simplifying the integration of Steam features into your Godot C# games.
