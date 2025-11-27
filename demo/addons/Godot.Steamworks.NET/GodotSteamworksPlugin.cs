@@ -13,17 +13,6 @@ public partial class GodotSteamworksPlugin : EditorPlugin
 {
 	public const string GodotSteamworksAutoloadName = "GodotSteamworks";
 
-	public override void _EnablePlugin()
-	{
-		GD.Print("Enabling GodotSteamworksPlugin");
-
-	}
-
-	public override void _DisablePlugin()
-	{
-		GD.Print("Disabling GodotSteamworksPlugin");
-	}
-
 	public override void _EnterTree()
 	{
 		// Register the main runtime singleton
