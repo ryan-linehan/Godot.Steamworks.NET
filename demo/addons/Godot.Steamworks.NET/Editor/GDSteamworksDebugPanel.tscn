@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://blj3qcrpktce6"]
+
+[ext_resource type="Script" uid="uid://cxs2s3uf06g3r" path="res://UI/Debug/GDSteamworksDebugPanel.cs" id="1_xjs5l"]
+[ext_resource type="PackedScene" uid="uid://d2c3tlh134p5o" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/AchievementsDebugPanel.tscn" id="2_y1fej"]
+
+[node name="DebugPanel" type="PanelContainer"]
+anchors_preset = -1
+anchor_left = 0.21000001
+anchor_top = 0.076000005
+anchor_right = 0.79800004
+anchor_bottom = 0.943
+offset_left = 0.07998657
+offset_top = -0.24800491
+offset_right = -0.2960205
+offset_bottom = -0.06402588
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("1_xjs5l")
+
+[node name="TabBar" type="TabContainer" parent="."]
+layout_mode = 2
+current_tab = 0
+
+[node name="Achievements" parent="TabBar" instance=ExtResource("2_y1fej")]
+unique_name_in_owner = true
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="CloseButton" type="Button" parent="TabBar/Achievements"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "close"

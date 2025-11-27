@@ -1,0 +1,59 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2c3tlh134p5o"]
+
+[ext_resource type="Script" uid="uid://g8iyrccln3mo" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/AchievementsDebugPanel.cs" id="1_rmb1c"]
+[ext_resource type="PackedScene" uid="uid://m2r65wscpp5v" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/AchievementDebugListItem.tscn" id="2_03g4y"]
+
+[node name="AchievementsDebugPanel" type="MarginContainer" node_paths=PackedStringArray("AchievementsContainer", "ClearAllButton", "UnlockAllButton", "RefreshButton")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+script = ExtResource("1_rmb1c")
+AchievementListItemScene = ExtResource("2_03g4y")
+AchievementsContainer = NodePath("VBoxContainer/ScrollContainer/AchievementsContainer")
+ClearAllButton = NodePath("VBoxContainer/ButtonsContainer/ClearAllButton")
+UnlockAllButton = NodePath("VBoxContainer/ButtonsContainer/UnlockAllButton")
+RefreshButton = NodePath("VBoxContainer/ButtonsContainer/RefreshListButton")
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="ClearAllButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "clear all"
+
+[node name="UnlockAllButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "unlock all"
+
+[node name="RefreshListButton" type="Button" parent="VBoxContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+text = "refresh list"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AchievementsContainer" type="HFlowContainer" parent="VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer" parent="VBoxContainer/ScrollContainer/AchievementsContainer" instance=ExtResource("2_03g4y")]
+layout_mode = 2

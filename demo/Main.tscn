@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://np4lwfg2b7vl"]
+[gd_scene load_steps=8 format=3 uid="uid://np4lwfg2b7vl"]
 
 [ext_resource type="PackedScene" uid="uid://del0dvsm2accj" path="res://UI/Steam/SteamLobbyMenu.tscn" id="1_glv2v"]
 [ext_resource type="Script" uid="uid://bsqk5alpxlwrs" path="res://Main.cs" id="1_r0du0"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dag7erv1whfoi" path="res://Game/Game.tscn" id="2_uu6xs"]
 [ext_resource type="PackedScene" uid="uid://dpcpny8vdk7y7" path="res://UI/Godot/GodotConnectMenu.tscn" id="3_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://buf080ay7gwws" path="res://UI/SinglePlayer/SinglePlayerMenu.tscn" id="5_3dxm6"]
+[ext_resource type="PackedScene" uid="uid://blj3qcrpktce6" path="res://addons/Godot.Steamworks.NET/Editor/GDSteamworksDebugPanel.tscn" id="6_lgr22"]
 
 [node name="Main" type="Node" node_paths=PackedStringArray("NetworkingCanvas", "Game")]
 script = ExtResource("1_r0du0")
@@ -30,6 +31,36 @@ visible = false
 
 [node name="SinglePlayerMenu" parent="NetworkingCanvas" instance=ExtResource("5_3dxm6")]
 
+[node name="DebugButtons" type="Control" parent="NetworkingCanvas"]
+layout_mode = 3
+anchor_top = 0.897
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -88.25598
+offset_bottom = -88.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="NetworkingCanvas/DebugButtons"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AchievementsButton" type="Button" parent="NetworkingCanvas/DebugButtons/HBoxContainer"]
+layout_mode = 2
+text = "Debug Panel"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="NetworkingCanvas"]
 offset_left = 16.0
 offset_top = 64.0
@@ -50,5 +81,9 @@ popup/item_1/id = 1
 [node name="RefreshButton" type="Button" parent="NetworkingCanvas/HBoxContainer"]
 layout_mode = 2
 text = "refresh"
+
+[node name="DebugPanel" parent="NetworkingCanvas" node_paths=PackedStringArray("OpenDebugPanelButton") instance=ExtResource("6_lgr22")]
+visible = false
+OpenDebugPanelButton = NodePath("../DebugButtons/HBoxContainer/AchievementsButton")
 
 [node name="Game" parent="." instance=ExtResource("2_uu6xs")]

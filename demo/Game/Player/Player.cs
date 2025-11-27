@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Steamworks.Net.Multiplayer.Peer;
 using Steamworks;
 using System;
 
