@@ -43,7 +43,7 @@ Rather than dealing with the complexities of Steamworks.NET directly, this wrapp
 Install the Steamworks.NET.AnyCPU package using the dotnet CLI:
 
 ```bash
-dotnet add package Steamworks.NET.AnyCPU
+dotnet add package Steamworks.NET.AnyCPU --version 2025.162.6-b-socket.1
 ```
 
 Or add it directly to your `.csproj` file:
