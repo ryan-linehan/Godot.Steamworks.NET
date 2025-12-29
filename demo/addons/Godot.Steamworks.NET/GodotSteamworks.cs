@@ -1,3 +1,4 @@
+#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
 using System;
 using Godot.Steamworks.Net.Multiplayer;
 using Steamworks;
@@ -125,5 +126,4 @@ public partial class GodotSteamworks : Node
         SteamAPI.RunCallbacks();
     }
 }
-
-
+#endif

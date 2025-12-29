@@ -1,3 +1,4 @@
+#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
 using Godot;
 namespace Godot.Steamworks.Net.Models;
 public partial class LobbyMember : Godot.RefCounted
@@ -11,3 +12,4 @@ public partial class LobbyMember : Godot.RefCounted
     /// </summary>
     public string SteamDisplayName { get; set; } = null!;
 }
+#endif

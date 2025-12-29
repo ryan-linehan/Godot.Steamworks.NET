@@ -1,3 +1,4 @@
+#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
 using System.Threading.Tasks;
 using Steamworks;
 
@@ -18,3 +19,4 @@ public static class SteamAsyncHelper
         return tcs.Task;
     }
 }
+#endif

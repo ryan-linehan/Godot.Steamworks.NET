@@ -1,3 +1,4 @@
+#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
 namespace Godot.Steamworks.Net;
 
 using Godot;
@@ -34,3 +35,4 @@ public static class GodotSteamworksLogger
         Log(message, LogLevel.Debug);
     }
 }
+#endif

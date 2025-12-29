@@ -1,3 +1,4 @@
+#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
 using Godot;
 using Steamworks;
 using System;
@@ -550,3 +551,4 @@ public partial class SteamworksLobby : Godot.RefCounted
         EmitSignal(SignalName.LobbySearchCompleted, lobbyIds);
     }
 }
+#endif

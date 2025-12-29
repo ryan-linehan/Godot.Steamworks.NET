@@ -1,3 +1,4 @@
+#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
 using Godot;
 using Godot.Steamworks.Net;
 using Godot.Steamworks.Net.Models;
@@ -135,25 +136,25 @@ public partial class SteamworksAchievements : RefCounted
         return achieved;
     }
     /// <summary>
-    /// Gets the progress of the specified achievement for the user.
+    /// Gets the progress of the specified stat for the user.
     /// </summary>
-    /// <param name="achievementKey"></param>
-    /// <returns></returns>
-    public int GetAchievementProgress(string achievementKey)
+    /// <param name="statKey">The Steam stat key (not the achievement key)</param>
+    /// <returns>The current stat value</returns>
+    public int GetStatProgress(string statKey)
     {
         int progress;
-        SteamUserStats.GetStat(achievementKey, out progress);
+        SteamUserStats.GetStat(statKey, out progress);
         return progress;
     }
 
     /// <summary>
-    /// Sets the progress of the specified achievement for the user.
+    /// Sets the progress of the specified stat for the user.
     /// </summary>
-    /// <param name="achievementKey"></param>
-    /// <param name="progress"></param>
-    public void SetAchievementProgress(string achievementKey, int progress)
+    /// <param name="statKey">The Steam stat key (not the achievement key)</param>
+    /// <param name="progress">The new stat value</param>
+    public void SetStatProgress(string statKey, int progress)
     {
-        SteamUserStats.SetStat(achievementKey, progress);
+        SteamUserStats.SetStat(statKey, progress);
         SteamUserStats.StoreStats();
     }
 
@@ -183,3 +184,4 @@ public partial class SteamworksAchievements : RefCounted
         SteamUserStats.StoreStats();
     }
 }
+#endif
