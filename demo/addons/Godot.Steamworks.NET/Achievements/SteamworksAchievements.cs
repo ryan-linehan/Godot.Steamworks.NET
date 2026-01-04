@@ -1,4 +1,4 @@
-#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
+#if GODOT_PC
 using Godot;
 using Godot.Steamworks.Net;
 using Godot.Steamworks.Net.Models;
@@ -183,5 +183,33 @@ public partial class SteamworksAchievements : RefCounted
         }
         SteamUserStats.StoreStats();
     }
+}
+#else
+// Stub implementation for non-desktop platforms (Android, iOS, Web, etc.)
+using Godot;
+using Godot.Steamworks.Net.Models;
+using System.Collections.Generic;
+
+namespace Godot.Steamworks.Net;
+
+/// <summary>
+/// Stub class for non-desktop platforms.
+/// Steam achievements are not supported on mobile platforms.
+/// </summary>
+public partial class SteamworksAchievements : RefCounted
+{
+    public void Init()
+    {
+        GodotSteamworksLogger.LogWarning("Steam achievements are not supported on this platform.");
+    }
+
+    public List<Achievement> GetAchievements() => new List<Achievement>();
+    public Texture2D? GetAchievementIcon(string achievementKey) => null;
+    public void UnlockAchievement(string achievementKey) { }
+    public bool IsAchievementUnlocked(string achievementKey) => false;
+    public int GetStatProgress(string statKey) => 0;
+    public void SetStatProgress(string statKey, int progress) { }
+    public void ClearAchievement(string achievementKey) { }
+    public void ResetAllAchievements() { }
 }
 #endif

@@ -1,4 +1,4 @@
-#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
+#if GODOT_PC
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -732,5 +732,53 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
             }
         }
     }
+}
+#else
+// Stub implementation for non-desktop platforms (Android, iOS, Web, etc.)
+using Godot;
+
+namespace Godot.Steamworks.Net.Multiplayer.Peer;
+
+/// <summary>
+/// Stub multiplayer peer for non-desktop platforms.
+/// Steam networking is not supported on mobile platforms.
+/// </summary>
+public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
+{
+    public bool NoNagle { get; set; } = true;
+    public bool NoDelay { get; set; } = false;
+
+    public SteamMultiplayerPeer()
+    {
+        GodotSteamworksLogger.LogWarning("Steam multiplayer is not supported on this platform.");
+    }
+
+    public Error CreateHost(int localVirtualPort) => Error.Unavailable;
+    public Error CreateClient(ulong identityRemote, int remoteVirtualPort) => Error.Unavailable;
+
+    public override byte[] _GetPacketScript() => System.Array.Empty<byte>();
+    public override Error _PutPacketScript(byte[] buffer) => Error.Unavailable;
+    public override int _GetAvailablePacketCount() => 0;
+    public override int _GetMaxPacketSize() => 0;
+    public override TransferModeEnum _GetPacketMode() => TransferModeEnum.Reliable;
+    public override void _SetTransferMode(TransferModeEnum mode) { }
+    public override TransferModeEnum _GetTransferMode() => TransferModeEnum.Reliable;
+    public override void _SetTransferChannel(int pChannel) { }
+    public override int _GetTransferChannel() => 0;
+    public override void _SetTargetPeer(int peer) { }
+    public override int _GetPacketPeer() => 0;
+    public override int _GetPacketChannel() => 0;
+    public override bool _IsServer() => false;
+    public bool IsActive() => false;
+    public override void _Poll() { }
+    public override void _Close() { }
+    public override void _DisconnectPeer(int peer, bool force) { }
+    public override int _GetUniqueId() => 0;
+    public override bool _IsServerRelaySupported() => false;
+    public override ConnectionStatus _GetConnectionStatus() => ConnectionStatus.Disconnected;
+
+    public int GetPeerIdFromSteam64(ulong steam64) => -1;
+    public ulong GetSteamIdFromPeerId(int peerId) => 0;
+    public string GetSteamDisplayNameFromPeerId(int peerId) => "";
 }
 #endif

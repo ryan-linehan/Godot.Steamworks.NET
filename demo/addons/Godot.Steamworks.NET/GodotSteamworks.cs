@@ -1,4 +1,4 @@
-#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
+#if GODOT_PC
 using System;
 using Godot.Steamworks.Net.Multiplayer;
 using Steamworks;
@@ -124,6 +124,49 @@ public partial class GodotSteamworks : Node
     {
         base._Process(delta);
         SteamAPI.RunCallbacks();
+    }
+}
+#else
+// Stub implementation for non-desktop platforms (Android, iOS, Web, etc.)
+using Godot;
+using Godot.Steamworks.Net.Multiplayer;
+
+namespace Godot.Steamworks.Net;
+
+/// <summary>
+/// Stub singleton class for non-desktop platforms.
+/// Steam is not supported on mobile platforms.
+/// </summary>
+public partial class GodotSteamworks : Node
+{
+    public static LogLevel LogLevel { get; set; } = LogLevel.Info;
+    public static GodotSteamworks Instance { get; private set; } = null!;
+    public static SteamworksLobby Lobby { get; private set; } = new SteamworksLobby();
+    public static SteamworksAchievements Achievements { get; private set; } = new SteamworksAchievements();
+    public bool IsInitialized => false;
+    public bool HandleSteamCallbacks { get; set; } = true;
+
+    public override void _EnterTree()
+    {
+        base._EnterTree();
+        Instance = this;
+        GodotSteamworksLogger.LogWarning("Steam is not supported on this platform.");
+    }
+
+    public void InitGodotSteamworks()
+    {
+        GodotSteamworksLogger.LogWarning("Steam is not supported on this platform.");
+    }
+
+    public override void _Ready()
+    {
+        base._Ready();
+        SetProcess(false);
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
     }
 }
 #endif

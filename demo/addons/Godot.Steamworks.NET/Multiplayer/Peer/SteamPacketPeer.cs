@@ -1,4 +1,4 @@
-#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
+#if GODOT_PC
 using System;
 using Godot;
 using Steamworks;
@@ -62,6 +62,37 @@ public partial class SteamPacketPeer : RefCounted
         TransferMode = transferMode;
 
         if (buffer != null && bufferSize > 0)
+        {
+            Array.Copy(buffer, 0, Data, 0, (int)bufferSize);
+        }
+    }
+}
+#else
+// Stub implementation for non-desktop platforms (Android, iOS, Web, etc.)
+using System;
+using Godot;
+
+namespace Godot.Steamworks.Net.Multiplayer.Peer;
+
+/// <summary>
+/// Stub packet peer for non-desktop platforms.
+/// Steam networking is not supported on mobile platforms.
+/// </summary>
+public partial class SteamPacketPeer : RefCounted
+{
+    public const int MaxSteamPacketSize = 524288;
+    public byte[] Data { get; private set; } = new byte[MaxSteamPacketSize];
+    public uint Size { get; set; }
+    public ulong Sender { get; set; }
+    public int TransferMode { get; set; } = 8;
+
+    public SteamPacketPeer() { }
+
+    public SteamPacketPeer(byte[] buffer, uint bufferSize, int transferMode = 8)
+    {
+        Size = bufferSize;
+        TransferMode = transferMode;
+        if (buffer != null && bufferSize > 0 && bufferSize <= MaxSteamPacketSize)
         {
             Array.Copy(buffer, 0, Data, 0, (int)bufferSize);
         }

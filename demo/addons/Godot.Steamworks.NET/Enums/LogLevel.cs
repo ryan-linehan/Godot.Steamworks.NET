@@ -1,4 +1,3 @@
-#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
 namespace Godot.Steamworks.Net;
 
 /// <summary>
@@ -27,4 +26,3 @@ public enum LogLevel
     /// </summary>
     Debug = 4
 }
-#endif

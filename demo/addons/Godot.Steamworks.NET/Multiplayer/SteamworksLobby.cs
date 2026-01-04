@@ -1,4 +1,4 @@
-#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
+#if GODOT_PC
 using Godot;
 using Steamworks;
 using System;
@@ -550,5 +550,81 @@ public partial class SteamworksLobby : Godot.RefCounted
 
         EmitSignal(SignalName.LobbySearchCompleted, lobbyIds);
     }
+}
+#else
+// Stub implementation for non-desktop platforms (Android, iOS, Web, etc.)
+using Godot;
+using System;
+using System.Threading.Tasks;
+using Godot.Steamworks.Net.Models;
+
+namespace Godot.Steamworks.Net.Multiplayer;
+
+/// <summary>
+/// Stub lobby class for non-desktop platforms.
+/// Steam lobbies are not supported on mobile platforms.
+/// </summary>
+public partial class SteamworksLobby : RefCounted
+{
+    [Signal] public delegate void LobbyCreatedEventHandler(ulong lobbyId);
+    [Signal] public delegate void LobbyJoinedEventHandler(ulong lobbyId);
+    [Signal] public delegate void LobbyJoinFailedEventHandler(ulong lobbyId, string errorMessage);
+    [Signal] public delegate void LobbyLeftEventHandler(ulong lobbyId);
+    [Signal] public delegate void PlayerLeftLobbyEventHandler(ulong lobbyId, ulong steamId, string playerName);
+    [Signal] public delegate void PlayerJoinedLobbyEventHandler(ulong lobbyId, ulong steamId, string playerName);
+    [Signal] public delegate void LobbySearchCompletedEventHandler(Godot.Collections.Array<ulong> lobbyIds);
+    [Signal] public delegate void LobbyDataUpdatedEventHandler();
+    [Signal] public delegate void LobbyDataUpdatedDetailedEventHandler(Godot.Collections.Dictionary<string, string> lobbyData);
+
+    public bool DetailedLobbyData { get; set; } = true;
+
+    public SteamworksLobby()
+    {
+        GodotSteamworksLogger.LogWarning("Steam lobbies are not supported on this platform.");
+    }
+
+    public Task<ulong[]> SearchLobbiesAsync(int maxResults = 50)
+        => Task.FromResult(Array.Empty<ulong>());
+
+    public ulong[] GetFriendLobbies() => Array.Empty<ulong>();
+
+    public void SearchLobbies(int maxResults = 50)
+        => EmitSignal(SignalName.LobbySearchCompleted, new Godot.Collections.Array<ulong>());
+
+    public Godot.Collections.Array<LobbyMember> GetLobbyMembers(ulong lobbyId)
+        => new Godot.Collections.Array<LobbyMember>();
+
+    public int GetLobbyMemberCount(ulong lobbyId) => 0;
+    public ulong GetLobbyOwner(ulong lobbyId) => 0;
+    public bool IsLobbyOwner(ulong lobbyId) => false;
+
+    public Task<ulong?> CreateLobbyAsync(int maxMembers, int lobbyType = 1)
+    {
+        EmitSignal(SignalName.LobbyJoinFailed, 0UL, "Steam not supported on this platform");
+        return Task.FromResult<ulong?>(null);
+    }
+
+    public void CreateLobby(int maxMembers, int lobbyType = 1)
+        => EmitSignal(SignalName.LobbyJoinFailed, 0UL, "Steam not supported on this platform");
+
+    public Task<bool> JoinLobbyAsync(ulong lobbyId)
+    {
+        EmitSignal(SignalName.LobbyJoinFailed, lobbyId, "Steam not supported on this platform");
+        return Task.FromResult(false);
+    }
+
+    public void JoinLobby(ulong lobbyId)
+        => EmitSignal(SignalName.LobbyJoinFailed, lobbyId, "Steam not supported on this platform");
+
+    public void LeaveLobby(ulong lobbyId)
+        => EmitSignal(SignalName.LobbyLeft, lobbyId);
+
+    public void SetLobbyJoinable(ulong lobbyId, bool joinable) { }
+    public string GetLobbyData(ulong lobbyId, string key) => "";
+
+    public Godot.Collections.Dictionary<string, string> GetAllLobbyData(ulong lobbyId)
+        => new Godot.Collections.Dictionary<string, string>();
+
+    public void SetLobbyData(ulong lobbyId, string key, string value) { }
 }
 #endif

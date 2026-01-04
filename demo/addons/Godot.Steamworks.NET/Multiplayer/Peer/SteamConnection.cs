@@ -1,4 +1,4 @@
-#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
+#if GODOT_PC
 using System;
 using System.Collections.Generic;
 using Godot;
@@ -319,5 +319,41 @@ public partial class SteamConnection : RefCounted
             _ => "Unmatched"
         };
     }
+}
+#else
+// Stub implementation for non-desktop platforms (Android, iOS, Web, etc.)
+using System.Collections.Generic;
+using Godot;
+
+namespace Godot.Steamworks.Net.Multiplayer.Peer;
+
+/// <summary>
+/// Stub connection class for non-desktop platforms.
+/// Steam networking is not supported on mobile platforms.
+/// </summary>
+public partial class SteamConnection : RefCounted
+{
+    public struct SetupPeerPayload
+    {
+        public uint PeerId;
+        public SetupPeerPayload() { PeerId = uint.MaxValue; }
+    }
+
+    public bool IsActive { get; set; }
+    public ulong SteamId { get; set; }
+    public ulong TickCountLastData { get; set; }
+    public int PeerId { get; set; } = -1;
+    public ulong LastMsgTimestamp { get; set; }
+    public List<SteamPacketPeer> PendingRetryPackets { get; private set; } = new List<SteamPacketPeer>();
+
+    public SteamConnection() { }
+    public SteamConnection(ulong steamId) { SteamId = steamId; }
+
+    public Error Send(SteamPacketPeer packet) => Error.Unavailable;
+    public void Flush() { }
+    public bool Close() => false;
+    public Error RequestPeer() => Error.Unavailable;
+    public Error SendPeer(uint peerId) => Error.Unavailable;
+    public bool Equals(SteamConnection other) => SteamId == other?.SteamId;
 }
 #endif

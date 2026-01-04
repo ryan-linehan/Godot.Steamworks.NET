@@ -1,4 +1,3 @@
-#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
 using Godot;
 using System;
 
@@ -85,4 +84,3 @@ public partial class AchievementsDebugPanel : MarginContainer
         Visible = true;
     }
 }
-#endif

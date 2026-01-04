@@ -1,8 +1,9 @@
-#if GODOT_PC || GODOT_WINDOWS || GODOT_LINUX || GODOT_MACOS || GODOT_X11 || GODOT_OSX
+#if GODOT_PC
 using System.Threading.Tasks;
 using Steamworks;
 
 namespace Godot.Steamworks.Net.Util;
+
 /// <summary>
 /// Helper class to convert Steam CallResults to async/await pattern
 /// </summary>
@@ -18,5 +19,16 @@ public static class SteamAsyncHelper
         callResult.Set(apiCall);
         return tcs.Task;
     }
+}
+#else
+// Stub implementation for non-desktop platforms
+namespace Godot.Steamworks.Net.Util;
+
+/// <summary>
+/// Stub helper class for non-desktop platforms.
+/// </summary>
+public static class SteamAsyncHelper
+{
+    // This class is intentionally empty on non-desktop platforms.
 }
 #endif
