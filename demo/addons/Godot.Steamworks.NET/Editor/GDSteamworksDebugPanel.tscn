@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://blj3qcrpktce6"]
 
-[ext_resource type="Script" uid="uid://cxs2s3uf06g3r" path="res://UI/Debug/GDSteamworksDebugPanel.cs" id="1_xjs5l"]
+[ext_resource type="Script" uid="uid://cxs2s3uf06g3r" path="res://addons/Godot.Steamworks.NET/Editor/GDSteamworksDebugPanel.cs" id="1_xjs5l"]
 [ext_resource type="PackedScene" uid="uid://d2c3tlh134p5o" path="res://addons/Godot.Steamworks.NET/Editor/Achivements/AchievementsDebugPanel.tscn" id="2_y1fej"]
 
 [node name="DebugPanel" type="PanelContainer"]
