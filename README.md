@@ -91,6 +91,23 @@ GodotSteamworks.Instance.Achievements.Unlock("FIRST_WIN");
 
 See the full documentation: [docs/achievements.md](docs/achievements.md)
 
+## 🛠️ Debug Panel
+
+A built-in debug panel scene is included for helping test Steam features at runtime. Add the `GDSteamworksDebugPanel.tscn` scene to your project and control it via code or wire up a button in the scene tree via the export on the scene.Debug panel supports:
+
+- **Achievements** - Reset and view the status of your achievements quickly to test your achievement triggers
+
+```csharp
+// Get a reference to the debug panel node
+var debugPanel = GetNode<GDSteamworksDebugPanel>("DebugPanel");
+
+// Open and close via the API
+debugPanel.Open();
+debugPanel.Close();
+```
+
+> **Note:** The debug panel is automatically disabled in release builds
+
 ### Accessing the Full Steamworks.NET API
 
 If the wrapper doesn't provide functionality you need, you can access the full Steamworks.NET library directly through the nuget package:
