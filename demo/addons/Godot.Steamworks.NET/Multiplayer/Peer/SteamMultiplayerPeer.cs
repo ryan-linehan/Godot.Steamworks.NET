@@ -34,6 +34,7 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
     private System.Collections.Generic.Dictionary<int, SteamConnection> peerIdToSteamId = new System.Collections.Generic.Dictionary<int, SteamConnection>();
     private int transferMode = (int)TransferModeEnum.Reliable;
     private HSteamListenSocket listenSocket = HSteamListenSocket.Invalid;
+    private HSteamNetConnection clientConnection = HSteamNetConnection.Invalid;
     private Queue<SteamPacketPeer> incomingPackets = new Queue<SteamPacketPeer>();
     private ConnectionStatus connectionStatus = ConnectionStatus.Disconnected;
     private MultiplayerPeerMode mode = MultiplayerPeerMode.NONE;
@@ -72,6 +73,8 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
             GD.PrintErr("The multiplayer instance is already active");
             return Error.AlreadyInUse;
         }
+        // Re-register the Steam callback if this peer was previously closed
+        m_SteamNetConnectionStatusChangedCallback ??= Callback<SteamNetConnectionStatusChangedCallback_t>.Create(OnNetworkConnectionStatusChanged);
         SteamNetworkingUtils.InitRelayNetworkAccess();
 
         listenSocket = SteamNetworkingSockets.CreateListenSocketP2P(localVirtualPort, 0, null);
@@ -94,6 +97,8 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
             GD.PrintErr("The multiplayer instance is already active");
             return Error.AlreadyInUse;
         }
+        // Re-register the Steam callback if this peer was previously closed
+        m_SteamNetConnectionStatusChangedCallback ??= Callback<SteamNetConnectionStatusChangedCallback_t>.Create(OnNetworkConnectionStatusChanged);
         uniqueId = GenerateUniqueId();
         SteamNetworkingUtils.InitRelayNetworkAccess();
 
@@ -110,6 +115,7 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
             return Error.CantConnect;
         }
 
+        clientConnection = connection;
         mode = MultiplayerPeerMode.CLIENT;
         connectionStatus = ConnectionStatus.Connecting;
         return Error.Ok;
@@ -266,7 +272,7 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
 
     public override void _Close()
     {
-        if (!IsActive() || connectionStatus != ConnectionStatus.Connected)
+        if (!IsActive())
         {
             return;
         }
@@ -276,13 +282,24 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
             entry.Value.Close();
         }
 
+        // Close the client connection if it exists and is not already closed
+        if (clientConnection != HSteamNetConnection.Invalid && !connectionsBySteamId64.Values.Any(c => c.ConnectionHandle == clientConnection))
+        {
+            SteamNetworkingSockets.CloseConnection(clientConnection, (int)ESteamNetConnectionEnd.k_ESteamNetConnectionEnd_App_Generic, "Peer closed", false);
+        }
+        clientConnection = HSteamNetConnection.Invalid;
+
         if (_IsServer())
         {
             CloseListenSocket();
         }
 
+        // Cleanup
+        m_SteamNetConnectionStatusChangedCallback?.Dispose();
+        m_SteamNetConnectionStatusChangedCallback = null;
         peerIdToSteamId.Clear();
         connectionsBySteamId64.Clear();
+        incomingPackets.Clear();
         mode = MultiplayerPeerMode.NONE;
         uniqueId = 0;
         connectionStatus = ConnectionStatus.Disconnected;
@@ -361,6 +378,11 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
 
     private void OnNetworkConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t param)
     {
+        if (!IsActive())
+        {
+            return;
+        }
+
         ulong steamId = param.m_info.m_identityRemote.GetSteamID64();
         ESteamNetworkingConnectionState oldStateEnum = param.m_eOldState;
         ESteamNetworkingConnectionState newStateEnum = param.m_info.m_eState;
@@ -561,6 +583,13 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
         }
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        m_SteamNetConnectionStatusChangedCallback?.Dispose();
+        m_SteamNetConnectionStatusChangedCallback = null;
+        base.Dispose(disposing);
+    }
+
     private void CloseListenSocket()
     {
         if (listenSocket != HSteamListenSocket.Invalid)
@@ -611,7 +640,10 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
 
         ~SteamConnection()
         {
-            SteamNetworkingSockets.CloseConnection(ConnectionHandle, (int)ESteamNetConnectionEnd.k_ESteamNetConnectionEnd_App_Generic, "Disconnect Default!", false);
+            if (ConnectionHandle != HSteamNetConnection.Invalid)
+            {
+                SteamNetworkingSockets.CloseConnection(ConnectionHandle, (int)ESteamNetConnectionEnd.k_ESteamNetConnectionEnd_App_Generic, "Disconnect Default!", false);
+            }
         }
 
         /// <summary>
@@ -691,7 +723,11 @@ public partial class SteamMultiplayerPeer : MultiplayerPeerExtension
             {
                 return false;
             }
-            return SteamNetworkingSockets.CloseConnection(ConnectionHandle, (int)ESteamNetConnectionEnd.k_ESteamNetConnectionEnd_App_Generic, "Failed to accept connection", false);
+            bool result = SteamNetworkingSockets.CloseConnection(ConnectionHandle, (int)ESteamNetConnectionEnd.k_ESteamNetConnectionEnd_App_Generic, "Failed to accept connection", false);
+            // Invalidate the handle so the finalizer can't close a recycled
+            // handle value belonging to a newer connection.
+            ConnectionHandle = HSteamNetConnection.Invalid;
+            return result;
         }
 
         public override bool Equals(object? obj)
